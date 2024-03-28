@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="app.css">
+
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="content hidden" id="artistAndTitle">
+            <div class="input-container">
+                <label class="input-container__label">Artist</label>
+                <input type="text" tabindex="0" class="input-container__input focusable" id="artist" />
+            </div>
+            <div class="input-container">
+                <label class="input-container__label">Title</label>
+                <input type="text" tabindex="0" class="input-container__input focusable" id="title" />
+            </div>
+            <div class="separator focusable" tabindex="0" onclick="openSearch();">Don't know the artist/title? Search</div>
+            <div class="button-container">
+                <button id="fetchLyrics" tabindex="0" class="button-container__button focusable" onclick="getLyrics(app.byArtistAndTitle.artist.value, app.byArtistAndTitle.title.value);">
+                    Get Lyrics
+                </button>
+
+            </div>
+            <div class="list-item focusable" tabindex="0">
+                <p class="list-item__text" id="lyricText" style="text-wrap: wrap; font-size: 1.5rem;"></p>
+            </div>
+        </div>
+
+        <div class="content " id="search">
+            <div class="input-container">
+                <input type="text" tabindex="0" class="input-container__input focusable" id="searchInput" placeholder="Search"  onfocus="softkeys('Back', 'SEARCH');"/>
+            </div>
+            <div class="separator focusable" tabindex="0" onclick="toggleFilter();" style="font-size: 1.35rem;">Only show results with avaiable lyrics</div>
+
+            <div id="searchResult"></div>
+        </div>
+
+        <div class="softkeys" >
+            <div class="softkey softkey-left"></div>
+            <div class="softkey softkey-center">select</div>
+            <div class="softkey softkey-right"></div>
+          </div>
+    </div>
+</body>
+
+</html>

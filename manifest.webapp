@@ -1,0 +1,23 @@
+{
+    "version": "1.0.0.0.1",
+    "name": "Get Your Lyrics",
+    "description": "Sunset, Sunrise and more",
+    "type": "web",
+    "launch_path": "/index.html",
+    "icons": {
+        "56": "/icon.png",
+        "112": "/icon.png"
+    },
+    "developer": {
+        "name": "W4IT Dev",
+        "url": "http://github.com/W4IT-Dev/"
+    },
+    "locales": {
+        "en-US": {
+            "name": "Get Your Lyrics",
+            "subtitle": "Wide collection of lyrics",
+            "description": "View information about the sun like Sunset, Sunrise, Day length based on your location."
+        }
+    },
+    "default_locale": "en-US"
+}
