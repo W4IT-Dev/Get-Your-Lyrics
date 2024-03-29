@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0.0.1",
+    "version": "1.0.2",
     "name": "Get Your Lyrics",
     "description": "Sunset, Sunrise and more",
     "type": "web",
@@ -10,8 +10,8 @@
     },
     "developer": {
         "name": "W4IT Dev",
-        "url": "http://github.com/W4IT-Dev/"
-    },
+        "url": "http://github.com/W4IT-Dev/get-your-lyrics"
+    }, 
     "locales": {
         "en-US": {
             "name": "Get Your Lyrics",

@@ -12,7 +12,7 @@
     <script src="script.js" defer></script>
 </head>
 
-<body>
+<body onload="go('search')">
     <div id="app">
         <div class="content hidden" id="artistAndTitle">
             <div class="input-container">
@@ -23,9 +23,9 @@
                 <label class="input-container__label">Title</label>
                 <input type="text" tabindex="0" class="input-container__input focusable" id="title" />
             </div>
-            <div class="separator focusable" tabindex="0" onclick="openSearch();">Don't know the artist/title? Search</div>
+            <div class="separator focusable" tabindex="0" onclick="go('search');" onkeydown="if(event.key === 'Enter'){go('search'); app.search.searchInput.value = ''; app.search.result.innerHTML = ''}">Don't know the artist/title? Search</div>
             <div class="button-container">
-                <button id="fetchLyrics" tabindex="0" class="button-container__button focusable" onclick="getLyrics(app.byArtistAndTitle.artist.value, app.byArtistAndTitle.title.value);">
+                <button id="fetchLyrics" tabindex="0" class="button-container__button focusable" onclick="lyrics(app.byArtistAndTitle.artist.value, app.byArtistAndTitle.title.value);">
                     Get Lyrics
                 </button>
 
@@ -37,9 +37,9 @@
 
         <div class="content " id="search">
             <div class="input-container">
-                <input type="text" tabindex="0" class="input-container__input focusable" id="searchInput" placeholder="Search"  onfocus="softkeys('Back', 'SEARCH');"/>
+                <input type="text" tabindex="0" class="input-container__input focusable" id="searchInput" placeholder="Search"  onfocus="softkeys('', 'SEARCH');"/>
             </div>
-            <div class="separator focusable" tabindex="0" onclick="toggleFilter();" style="font-size: 1.35rem;">Only show results with avaiable lyrics</div>
+            <div class="separator focusable" id="filterToggle" tabindex="0" onkeydown="if(event.key === 'Enter') { showOnlySongsWithAvaibleLyrics = !showOnlySongsWithAvaibleLyrics; filterSearch(searchResultCopy, true); }" style="font-size: 1.05rem;">Only showing results with avaiable lyrics</div>
 
             <div id="searchResult"></div>
         </div>
