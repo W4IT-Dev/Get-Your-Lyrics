@@ -225,7 +225,7 @@ document.addEventListener('keydown', e => {
 	// SEARCH
 	if (focusedElement === app.search.searchInput) {
 		if (e.key.includes('Arrow')) return
-		if (e.key == "Enter") return clearTimeout(searchTypeTimeout), search(app.search.searchInput.value)
+		if (e.key == "Enter") return clearTimeout(searchTypeTimeout), search(app.search.searchInput.value, true)
 		clearTimeout(searchTypeTimeout)
 		searchTypeTimeout = setTimeout(() => { search(app.search.searchInput.value) }, 1500)
 	}
@@ -235,7 +235,7 @@ document.addEventListener('keydown', e => {
 
 	// GET LYRICS on search screen
 	if (focusedElement.dataset.previewPlaying) {
-		if (e.key == "Enter") lyrics(focusedElement.dataset.artist, focusedElement.dataset.title)
+		// if (e.key == "Enter") lyrics(focusedElement.dataset.artist, focusedElement.dataset.title)
 	}
 })
 
@@ -276,9 +276,10 @@ function nav(move) {
 	let currentElemIdx = [...items].indexOf(currentIndex);
 	if (move == -1 && currentElemIdx == -1) currentElemIdx = items.length
 	const next = currentElemIdx + move;
-	const targetElement = items[next];
+	let targetElement = items[next];
+	if(targetElement === document.querySelector('#goToSearch') && move === 1 && app.byArtistAndTitle.artist.value && app.byArtistAndTitle.title.value) targetElement = app.byArtistAndTitle.fetchButton
 	if (targetElement) targetElement.focus();
-	else items[0].focus();
+	else document.body.focus();
 }
 
 // set softkeys
@@ -314,24 +315,33 @@ function fetchLyricsByArtistAndTitle(artist, title) {
 
 // Get lyrics function
 function lyrics(artist, title) {
+	if (artist === "isStoredLyrics" && typeof title !== undefined) {
+		console.log(searchResults[title])
+		displayLyrics(searchResults[title].lyrics, searchResults[title].artist.name, searchResults[title].title)
+		return go('byArtistAndTitle')
+	}
 	fetchLyricsByArtistAndTitle(artist, title)
 		.then((lyrics) => {
 			let result = lyrics.replace(/^Paroles de la chanson .+$/m, '');
 			console.log(result);
-			const focusedElement = document.activeElement
-			app.byArtistAndTitle.artist.value = artist
-			app.byArtistAndTitle.title.value = title
 
-			app.byArtistAndTitle.result.innerText = result
+			displayLyrics(result, artist, title)
 			go('byArtistAndTitle')
 		})
 }
 
+function displayLyrics(lyrics, artist, title) {
+	app.byArtistAndTitle.result.innerText = lyrics
+	app.byArtistAndTitle.artist.value = artist
+	app.byArtistAndTitle.title.value = title
+}
+
 // == LYRICS by SEARCH ==
 // = SEARCH =
+let searchResults;;
 let searchResultCopy;
 function fetchSearchQuery(query) {
-	return fetch(`https://api.lyrics.ovh/suggest/${query}`) // TODO: USE DEEZER LINK and 30
+	return fetch(`https://api.lyrics.ovh/suggest/${query}`)
 		.then((response) => {
 			if (!response.ok) {
 				throw new Error("Network response was not ok");
@@ -340,7 +350,7 @@ function fetchSearchQuery(query) {
 		})
 		.then((data) => {
 			console.log(`Search results to query ${query}: `)
-			
+			searchResults = data.data
 			searchResultCopy = data.data
 			console.log(data)
 			return filterSearch(data.data)
@@ -351,79 +361,101 @@ function fetchSearchQuery(query) {
 		});
 }
 
-function search(query) {
-	if (query === "{clear}") return app.search.result.innerHTML = ""
+function search(query, focusFirstResult) {
+	if (query === "{clearsearch}") return app.search.result.innerHTML = ""
 	if (query == "" || query == "") return
 	app.search.result.innerHTML = "Searching..."
 	fetchSearchQuery(query)
 		.then((results) => {
-			// displaySearchResults(results);
+			console.log(results)
+			displaySearchResults(results, focusFirstResult);
 		})
 }
 
-function displaySearchResults(results) {
+function displaySearchResults(results, focusFirstResult) {
 	app.search.filterToggle.innerText = showOnlySongsWithAvaibleLyrics === true ? "Only showing songs with avaible lyrics" : "Showing all results"
 	app.search.result.innerHTML = ""
+	if (results === "ERROR") {
+		app.search.result.innerHTML = `
+		<div class="list-item-icon focusable" tabindex="0" onkeydown="if(event.key === 'Enter') { app.search.searchInput.focus(); };" onfocus="softkeys('', 'SEARCH','');">
+    		<img src="/image.png" alt="" class="list-item-icon__icon" />
+    		<div class="list-item-icon__text-container">
+        		<p class="list-item__text">Nothing found</p>
+        		<p class="list-item__subtext">Try something else</p>
+    		</div>
+		</div>`
+		if(focusFirstResult)app.search.result.querySelector('.list-item-icon').focus();
+		return 
+	}
 	for (let i = 0; i < results.length; i++) {
 		app.search.result.innerHTML += `
-		<div class="list-item-icon focusable" tabindex="${i}" onkeydown="if(event.key === 'Enter') { lyrics('${results[i].artist.name}', '${results[i].title}'); };" onfocus="softkeys('Back', 'LYRICS','Preview');" data-artist="${results[i].artist.name}" data-title="${results[i].title}" data-cover="${results[i].album.cover_small}" data-preview="${results[i].preview}"  data-preview-Playing="false" data-current-preview="false">
-    <img src="${results[i].album.cover_small}" alt="" class="list-item-icon__icon" />
-    <div class="list-item-icon__text-container">
-        <p class="list-item__text">${results[i].title}</p>
-        <p class="list-item__subtext">${results[i].artist.name}</p>
-    </div>
-</div>
+		<div class="list-item-icon focusable" tabindex="${i}" onkeydown="if(event.key === 'Enter') { lyrics('isStoredLyrics', ${i}); };" onfocus="softkeys('Search', 'LYRICS','Preview');" data-artist="${results[i].artist.name}" data-title="${results[i].title}" data-cover="${results[i].album.cover_small}" data-preview="${results[i].preview}"  data-preview-Playing="false" data-current-preview="false">
+    		<img src="${results[i].album.cover_small}" alt="" class="list-item-icon__icon" />
+    		<div class="list-item-icon__text-container">
+        		<p class="list-item__text">${results[i].title}</p>
+        		<p class="list-item__subtext">${results[i].artist.name}</p>
+    		</div>
+		</div>
 		`
 	}
+	if(focusFirstResult)app.search.result.querySelector('.list-item-icon').focus();
+
 }
 let filteredSongList = [];
 
 function filterSearch(songList, toggleByHTML) {
-	searchResultCopy = filteredSongList = [];
-	if (toggleByHTML && filteredSongList.length != 0) {
-		if (!showOnlySongsWithAvaibleLyrics) return searchResultCopy, displaySearchResults(searchResultCopy);
-		return filteredSongList, displaySearchResults(filteredSongList);
-	}
-	console.log(showOnlySongsWithAvaibleLyrics)
-	console.log('filter');
+    return new Promise((resolve, reject) => {
+        if (toggleByHTML && filteredSongList.length !== 0) {
+            console.error('not filtering');
+            if (!showOnlySongsWithAvaibleLyrics) {
+                console.error('early return');
+                resolve(searchResultCopy);
+                return;
+            }
+            console.error('early return');
+            resolve(filteredSongList);
+            return;
+        }
 
-	let fetchPromises = [];
+        filteredSongList = [];
+        console.log('filter: ');
+        console.log(showOnlySongsWithAvaibleLyrics);
 
-	for (let i = 0; i < songList.length; i++) {
-		fetchPromises.push(
-			fetchLyricsByArtistAndTitle(songList[i].artist.name, songList[i].title)
-				.then((result) => {
-					if (result.includes('Something went wrong.')) {
-						console.log('NO LYRICS FOUND. Song needs to be ejected');
-					} else {
-						console.log('Lyrics found. Song can stay');
-						filteredSongList.push(songList[i]);
-					}
-				})
-				.catch((error) => {
-					console.error('WTF HAPPEND; Error fetching lyrics:', error);
-				})
-		);
-	}
+        let fetchPromises = [];
 
-	Promise.all(fetchPromises)
-		.then(() => {
-			console.log(filteredSongList.length)
-			if (filteredSongList.length < 1) {
-				filteredSongList = [{
-					'title': "Nothing found",
-					artist: {
-						name: 'Try something else'
-					},
-					album: {
-						cover_small: '/image.png'
-					}
-				}]
-			}
-			filteredSongList
-			displaySearchResults(filteredSongList)
-		});
+        for (let i = 0; i < songList.length; i++) {
+            fetchPromises.push(
+                fetchLyricsByArtistAndTitle(songList[i].artist.name, songList[i].title)
+                    .then((result) => {
+                        if (result.includes('Something went wrong.')) {
+                            console.log('NO LYRICS FOUND. Song needs to be ejected');
+                        } else {
+                            console.log('Lyrics found. Song can stay');
+                            searchResults[i].lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
+                            filteredSongList.push(songList[i]);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('WTF HAPPENED; Error fetching lyrics:', error);
+                    })
+            );
+        }
+
+        Promise.all(fetchPromises)
+            .then(() => {
+                console.log(filteredSongList.length);
+                if (filteredSongList.length === 0) {
+                    filteredSongList = "ERROR";
+                }
+                console.log(filteredSongList);
+                resolve(filteredSongList);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+    });
 }
+
 
 // PREVIEW
 function playPreview() {

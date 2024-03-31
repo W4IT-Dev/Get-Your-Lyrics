@@ -50,23 +50,23 @@
     font-size: 10px;
     --capitalization: none;
     --content-overflow: auto;
-    --app-background: #fbfbfb;
+    --app-background: rgb(15, 17, 38);
     --toast-background: #fbfbfb;
     --toast-color: #ffffff;
     --header-background: #1f3374;
     --header-color: #ffffff;
     --softkeys-background: #cccccc;
     --softkeys-color: #323232;
-    --item-background: #fbfbfb;
-    --item-text-color: #323232;
-    --item-subtext-color: #6a6a6a;
-    --item-focused-background: #454545;
-    --item-focused-text-color: #ffffff;
-    --item-focused-subtext-color: #ffffff;
+    --item-background: rgb(15, 17, 38);
+    --item-text-color: #ffffff;
+    --item-subtext-color: #a3a3a3;
+    --item-focused-background: rgba(229, 184, 11, 0.85);
+    --item-focused-text-color: #000000;
+    --item-focused-subtext-color: #121212;
     --arrow-color: #000000;
-    --button-background: #cccccc;
-    --button-color: #323232;
-    --button-background-focused: #873eff;
+    --button-background: rgb(28, 35, 113);
+    --button-color: white;
+    --button-background-focused: rgba(229, 184, 11, 0.77);
     --button-color-focused: #ffffff;
     --checkbox-color: #873eff;
     --checkbox-color-focused: #ffffff;
@@ -80,8 +80,8 @@
     --progress-color-selected: #873eff;
     --progress-focused-color: #aaaaaa;
     --progress-focused-selected: #ffffff;
-    --separator-background: #e6e6e6;
-    --separator-color: #6a6a6a;
+    --separator-background: rgb(23, 26, 77);
+    --separator-color: white;
     --textarea-height: 15rem
 }
 
@@ -130,16 +130,23 @@
 .radio-container__subtext,
 .slider-container__subtext,
 .textarea-container__label {
-    
     color: var(--item-subtext-color)
 }
 
+*:focus .list-item__text{
+
+    color: var(--item-focused-text-color);
+}
+
+*:focus .list-item__subtext{
+    color: var(--item-focused-subtext-color);
+}
 .list-item-icon:focus,
 .list-item-indicator:focus,
 .list-item:focus,
 .progress-container:focus,
 .selected {
-    background: var(--item-focused-background)
+    background: var(--item-focused-background);
 }
 
 .list-item-icon:focus .list-item-icon__text,
@@ -267,7 +274,6 @@ html {
     justify-content: center
 }
 
-
 .list-item__text {
     overflow: hidden;
     font-weight: 400;
@@ -368,8 +374,8 @@ html {
 }
 
 .separator:focus {
-    background: #aeaeae;
-    color: white;
+    background: rgba(229, 184, 11, 0.95);
+    color: black;
 }
 
 .checkbox-container__checkbox,
@@ -483,7 +489,7 @@ html {
 .input-container__input,
 .textarea-container__textarea {
     padding: 0 .3rem;
-    margin-top: .5rem;
+    /* margin-top: .5rem; */
     width: 100%;
     font-size: 1.7rem;
     font-weight: 400;
