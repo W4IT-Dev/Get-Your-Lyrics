@@ -5,7 +5,7 @@ const app = {
 		title: document.querySelector('#title'),
 		insteadSearch: document.querySelector('#artistAndTitle .separator'),
 		fetchButton: document.querySelector('#fetchLyrics'),
-		result: document.querySelector('#lyricText')
+		result: document.querySelector('#lyricsText')
 	},
 	search: {
 		root: document.querySelector('#search'),
@@ -207,7 +207,7 @@ const app = {
 
 // == APP ==
 // variables
-let showOnlySongsWithAvaibleLyrics = true;
+let showOnlySongsWithAvaibleLyrics = false;
 
 
 // KEYDOWN
@@ -227,17 +227,22 @@ document.addEventListener('keydown', e => {
 		if (e.key.includes('Arrow')) return
 		if (e.key == "Enter") return clearTimeout(searchTypeTimeout), search(app.search.searchInput.value, true)
 		clearTimeout(searchTypeTimeout)
-		searchTypeTimeout = setTimeout(() => { search(app.search.searchInput.value) }, 1500)
+		searchTypeTimeout = setTimeout(() => { search(app.search.searchInput.value, false) }, 1500)
 	}
 
 	// Play PREVIEW
 	if (e.key == "SoftRight" || e.key == "3") playPreview();
+
+	// Search
+	if (e.key == "SoftLeft" || e.key == "1") go('search')
 
 	// GET LYRICS on search screen
 	if (focusedElement.dataset.previewPlaying) {
 		// if (e.key == "Enter") lyrics(focusedElement.dataset.artist, focusedElement.dataset.title)
 	}
 })
+
+
 
 // open page
 function go(target) {
@@ -277,7 +282,7 @@ function nav(move) {
 	if (move == -1 && currentElemIdx == -1) currentElemIdx = items.length
 	const next = currentElemIdx + move;
 	let targetElement = items[next];
-	if(targetElement === document.querySelector('#goToSearch') && move === 1 && app.byArtistAndTitle.artist.value && app.byArtistAndTitle.title.value) targetElement = app.byArtistAndTitle.fetchButton
+	if (targetElement === document.querySelector('#goToSearch') && move === 1 && app.byArtistAndTitle.artist.value && app.byArtistAndTitle.title.value) targetElement = app.byArtistAndTitle.fetchButton
 	if (targetElement) targetElement.focus();
 	else document.body.focus();
 }
@@ -314,11 +319,18 @@ function fetchLyricsByArtistAndTitle(artist, title) {
 }
 
 // Get lyrics function
-function lyrics(artist, title) {
+function lyrics(artist, title, titleIsLyrics_Artist, titleIsLyrics_Title) {
 	if (artist === "isStoredLyrics" && typeof title !== undefined) {
 		console.log(searchResults[title])
 		displayLyrics(searchResults[title].lyrics, searchResults[title].artist.name, searchResults[title].title)
 		return go('byArtistAndTitle')
+	}
+	if (artist === "titleIsLyrics" && typeof title !== undefined) {
+		console.log(title)
+		displayLyrics(title, titleIsLyrics_Artist, titleIsLyrics_Title)
+		go('byArtistAndTitle')
+		return
+
 	}
 	fetchLyricsByArtistAndTitle(artist, title)
 		.then((lyrics) => {
@@ -364,7 +376,7 @@ function fetchSearchQuery(query) {
 function search(query, focusFirstResult) {
 	if (query === "{clearsearch}") return app.search.result.innerHTML = ""
 	if (query == "" || query == "") return
-	app.search.result.innerHTML = "Searching..."
+	app.search.result.innerHTML = "<h2 style='color:white; text-align: center;'>Searching...</h2>" // TODO
 	fetchSearchQuery(query)
 		.then((results) => {
 			console.log(results)
@@ -384,12 +396,13 @@ function displaySearchResults(results, focusFirstResult) {
         		<p class="list-item__subtext">Try something else</p>
     		</div>
 		</div>`
-		if(focusFirstResult)app.search.result.querySelector('.list-item-icon').focus();
-		return 
+		if (focusFirstResult) app.search.result.querySelector('.list-item-icon').focus();
+		return
 	}
 	for (let i = 0; i < results.length; i++) {
+		// GOHERE
 		app.search.result.innerHTML += `
-		<div class="list-item-icon focusable" tabindex="${i}" onkeydown="if(event.key === 'Enter') { lyrics('isStoredLyrics', ${i}); };" onfocus="softkeys('Search', 'LYRICS','Preview');" data-artist="${results[i].artist.name}" data-title="${results[i].title}" data-cover="${results[i].album.cover_small}" data-preview="${results[i].preview}"  data-preview-Playing="false" data-current-preview="false">
+		<div class="list-item-icon focusable" tabindex="${i}" onfocus="let focusTimeout; softkeys('Search', '', 'Preview'); focusTimeout=setTimeout(() => { let activeElement=document.activeElement; softkeys('Search', 'LOADING...', 'Preview'); if (this.dataset.lyrics) { softkeys('Search', 'LYRICS', 'Preview'); } else { fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title).then((result) => { if (result.includes('Something went wrong')) return softkeys('Search', '', 'Preview'); if (activeElement == document.activeElement) { softkeys('Search', 'LYRICS', 'Preview'); } this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, ''); this.onkeydown = (e) => { if (e.key == 'Enter' && this.dataset.lyrics) { lyrics('titleIsLyrics', this.dataset.lyrics, this.dataset.artist, this.dataset.title); } }; }); } }, 650); this.onblur = () => { clearTimeout(focusTimeout); }" data-artist="${results[i].artist.name}" data-title="${results[i].title}" data-cover="${results[i].album.cover_small}" data-preview="${results[i].preview}"  data-preview-Playing="false" data-current-preview="false">
     		<img src="${results[i].album.cover_small}" alt="" class="list-item-icon__icon" />
     		<div class="list-item-icon__text-container">
         		<p class="list-item__text">${results[i].title}</p>
@@ -397,69 +410,104 @@ function displaySearchResults(results, focusFirstResult) {
     		</div>
 		</div>
 		`
+
+		let item = document.querySelectorAll('.list-item-icon')[i]
+		item.onfucus = () => {
+			let focusTimeout;
+			softkeys('Search', '', 'Preview');
+			focusTimeout = setTimeout(() => {
+				let activeElement = document.activeElement
+				softkeys('Search', 'LOADING...', 'Preview');
+				if (item.dataset.lyrics) { softkeys('Search', 'LYRICS', 'Preview') } else {
+					fetchLyricsByArtistAndTitle(item.dataset.artist, item.dataset.title).then((result) => {
+						if (result.includes('Something went wrong')) return softkeys('Search', '', 'Preview')
+						if (activeElement == document.activeElement) {
+							softkeys('Search', 'LYRICS', 'Preview');
+						}
+						item.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
+
+						item.onkeydown = (e) => {
+							if (e.key == "Enter" && item.dataset.lyrics) {
+								lyrics('titleIsLyrics', item.dataset.lyrics, item.dataset.artist, item.dataset.title)
+							}
+						}
+					})
+				}
+			}, 650)
+
+			item.onblur = () => {
+				clearTimeout(focusTimeout)
+			}
+		}
 	}
-	if(focusFirstResult)app.search.result.querySelector('.list-item-icon').focus();
+	if (focusFirstResult) app.search.result.querySelector('.list-item-icon').focus();
 
 }
 let filteredSongList = [];
 
 function filterSearch(songList, toggleByHTML) {
-    return new Promise((resolve, reject) => {
-        if (toggleByHTML && filteredSongList.length !== 0) {
-            console.error('not filtering');
-            if (!showOnlySongsWithAvaibleLyrics) {
-                console.error('early return');
-                resolve(searchResultCopy);
-                return;
-            }
-            console.error('early return');
-            resolve(filteredSongList);
-            return;
-        }
+	if(songList.length === 0) {
+		return "ERROR"
+	}
+	return new Promise((resolve, reject) => {
+		if (toggleByHTML && filteredSongList.length !== 0) {
+			console.error('not filtering');
+			if (!showOnlySongsWithAvaibleLyrics) {
+				console.error('early return');
+				resolve(searchResultCopy);
+				return;
+			}
+			console.error('early return');
+			resolve(filteredSongList);
+			return;
+		}
 
-        filteredSongList = [];
-        console.log('filter: ');
-        console.log(showOnlySongsWithAvaibleLyrics);
+		filteredSongList = [];
+		console.log('filter: ');
+		console.log(showOnlySongsWithAvaibleLyrics);
+		if (!showOnlySongsWithAvaibleLyrics) return resolve(searchResultCopy)
+		let fetchPromises = [];
+		for (let i = 0; i < songList.length; i++) {
+			fetchPromises.push(
+				fetchLyricsByArtistAndTitle(songList[i].artist.name, songList[i].title)
+					.then((result) => {
+						if (result.includes('Something went wrong.')) {
+							console.log('NO LYRICS FOUND. Song needs to be ejected');
+						} else {
+							console.log('Lyrics found. Song can stay');
+							searchResults[i].lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
+							filteredSongList.push(songList[i]);
+						}
+					})
+					.catch((error) => {
+						console.error('WTF HAPPENED; Error fetching lyrics:', error);
+					})
+			);
+		}
 
-        let fetchPromises = [];
-
-        for (let i = 0; i < songList.length; i++) {
-            fetchPromises.push(
-                fetchLyricsByArtistAndTitle(songList[i].artist.name, songList[i].title)
-                    .then((result) => {
-                        if (result.includes('Something went wrong.')) {
-                            console.log('NO LYRICS FOUND. Song needs to be ejected');
-                        } else {
-                            console.log('Lyrics found. Song can stay');
-                            searchResults[i].lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
-                            filteredSongList.push(songList[i]);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('WTF HAPPENED; Error fetching lyrics:', error);
-                    })
-            );
-        }
-
-        Promise.all(fetchPromises)
-            .then(() => {
-                console.log(filteredSongList.length);
-                if (filteredSongList.length === 0) {
-                    filteredSongList = "ERROR";
-                }
-                console.log(filteredSongList);
-                resolve(filteredSongList);
-            })
-            .catch((error) => {
-                reject(error);
-            });
-    });
+		Promise.all(fetchPromises)
+			.then(() => {
+				console.log(filteredSongList.length);
+				if (!filteredSongList) {
+					filteredSongList = "ERROR";
+				}
+				console.log(filteredSongList);
+				resolve(filteredSongList);
+			})
+			.catch((error) => {
+				reject(error);
+			});
+	});
 }
 
 
 // PREVIEW
 function playPreview() {
 	const focusedElement = document.activeElement;
+	if (focusedElement.id === "lyricsText") {
+		if (!preview.src === searchResultCopy[focusedElement.dataset.index].preview) preview.src = searchResultCopy[focusedElement.dataset.index].preview
+		preview.paused ? preview.play() : preview.pause()
+	}
 	if (focusedElement.dataset.previewPlaying) { // check if song item
 		// console.log('exist')
 		if (preview.src) { // ALREADY SOURCE
@@ -490,3 +538,7 @@ function playPreview() {
 		}
 	}
 }
+// GOHERE
+
+
+// FOCUS

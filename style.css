@@ -60,13 +60,13 @@
     --item-background: rgb(15, 17, 38);
     --item-text-color: #ffffff;
     --item-subtext-color: #a3a3a3;
-    --item-focused-background: rgba(229, 184, 11, 0.85);
+    --item-focused-background: rgb(243, 197, 15);
     --item-focused-text-color: #000000;
     --item-focused-subtext-color: #121212;
     --arrow-color: #000000;
     --button-background: rgb(28, 35, 113);
     --button-color: white;
-    --button-background-focused: rgba(229, 184, 11, 0.77);
+    --button-background-focused: rgb(244, 197, 12);
     --button-color-focused: #ffffff;
     --checkbox-color: #873eff;
     --checkbox-color-focused: #ffffff;
@@ -134,7 +134,6 @@
 }
 
 *:focus .list-item__text{
-
     color: var(--item-focused-text-color);
 }
 

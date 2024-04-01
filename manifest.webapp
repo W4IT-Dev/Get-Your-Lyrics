@@ -1,7 +1,7 @@
 {
-    "version": "1.0.3",
+    "version": "1.0.4",
     "name": "Get Your Lyrics",
-    "description": "Sunset, Sunrise and more",
+    "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title.",
     "type": "web",
     "launch_path": "/index.html",
     "icons": {
@@ -16,8 +16,9 @@
         "en-US": {
             "name": "Get Your Lyrics",
             "subtitle": "Wide collection of lyrics",
-            "description": "View information about the sun like Sunset, Sunrise, Day length based on your location."
+            "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title."
         }
     },
+    "theme_color": "#171a4d",
     "default_locale": "en-US"
 }
