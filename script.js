@@ -402,7 +402,7 @@ function displaySearchResults(results, focusFirstResult) {
 	for (let i = 0; i < results.length; i++) {
 		// GOHERE
 		app.search.result.innerHTML += `
-		<div class="list-item-icon focusable" tabindex="${i}" onfocus="let focusTimeout; softkeys('Search', '', 'Preview'); focusTimeout=setTimeout(() => { let activeElement=document.activeElement; softkeys('Search', 'LOADING...', 'Preview'); if (this.dataset.lyrics) { softkeys('Search', 'LYRICS', 'Preview'); } else { fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title).then((result) => { if (result.includes('Something went wrong')) return softkeys('Search', '', 'Preview'); if (activeElement == document.activeElement) { softkeys('Search', 'LYRICS', 'Preview'); } this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, ''); this.onkeydown = (e) => { if (e.key == 'Enter' && this.dataset.lyrics) { lyrics('titleIsLyrics', this.dataset.lyrics, this.dataset.artist, this.dataset.title); } }; }); } }, 650); this.onblur = () => { clearTimeout(focusTimeout); }" data-artist="${results[i].artist.name}" data-title="${results[i].title}" data-cover="${results[i].album.cover_small}" data-preview="${results[i].preview}"  data-preview-Playing="false" data-current-preview="false">
+		<div class="list-item-icon focusable" tabindex="${i}" onfocus="if (this.dataset.lyrics) { this.dataset.lyrics === 'null' ? softkeys('Search', '', 'Preview') : softkeys('Search', 'LYRICS', 'Preview'); } else { let focusTimeout; softkeys('Search', '', 'Preview'); focusTimeout = setTimeout(() => { let activeElement = document.activeElement; softkeys('Search', 'LOADING...', 'Preview'); if (this.dataset.lyrics) { softkeys('Search', 'LYRICS', 'Preview'); } else { fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title).then((result) => { if (result.includes('Something went wrong')) return softkeys('Search', '', 'Preview'), this.dataset.lyrics = 'null'; if (activeElement == document.activeElement) { softkeys('Search', 'LYRICS', 'Preview'); } this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, ''); this.onkeydown = (e) => { if (e.key == 'Enter' && this.dataset.lyrics) { if (this.dataset.lyrics !== 'null') lyrics('titleIsLyrics', this.dataset.lyrics, this.dataset.artist, this.dataset.title); } }; }); } }, 650); this.onblur = () => { clearTimeout(focusTimeout); }}"  data-artist="${results[i].artist.name}" data-title="${results[i].title}" data-cover="${results[i].album.cover_small}" data-preview="${results[i].preview}"  data-preview-Playing="false" data-current-preview="false">
     		<img src="${results[i].album.cover_small}" alt="" class="list-item-icon__icon" />
     		<div class="list-item-icon__text-container">
         		<p class="list-item__text">${results[i].title}</p>
@@ -411,34 +411,39 @@ function displaySearchResults(results, focusFirstResult) {
 		</div>
 		`
 
-		let item = document.querySelectorAll('.list-item-icon')[i]
-		item.onfucus = () => {
-			let focusTimeout;
-			softkeys('Search', '', 'Preview');
-			focusTimeout = setTimeout(() => {
-				let activeElement = document.activeElement
-				softkeys('Search', 'LOADING...', 'Preview');
-				if (item.dataset.lyrics) { softkeys('Search', 'LYRICS', 'Preview') } else {
-					fetchLyricsByArtistAndTitle(item.dataset.artist, item.dataset.title).then((result) => {
-						if (result.includes('Something went wrong')) return softkeys('Search', '', 'Preview')
-						if (activeElement == document.activeElement) {
-							softkeys('Search', 'LYRICS', 'Preview');
-						}
-						item.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
+		// let item = document.querySelectorAll('.list-item-icon')[i]
+		// console.log(item)
+		// item.onfocus = () => {
+		// 	if (item.dataset.lyrics) {
+		// 		item.dataset.lyrics === "null" ? softkeys('Search', '', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');
+		// 	} else {
+		// 		let focusTimeout;
+		// 		softkeys('Search', '', 'Preview');
+		// 		focusTimeout = setTimeout(() => {
+		// 			let activeElement = document.activeElement
+		// 			softkeys('Search', 'LOADING...', 'Preview');
+		// 			if (item.dataset.lyrics) { softkeys('Search', 'LYRICS', 'Preview') } else {
+		// 				fetchLyricsByArtistAndTitle(item.dataset.artist, item.dataset.title).then((result) => {
+		// 					if (result.includes('Something went wrong')) return softkeys('Search', '', 'Preview'), item.dataset.lyrics = "null"
+		// 					if (activeElement == document.activeElement) {
+		// 						softkeys('Search', 'LYRICS', 'Preview');
+		// 					}
+		// 					item.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
 
-						item.onkeydown = (e) => {
-							if (e.key == "Enter" && item.dataset.lyrics) {
-								lyrics('titleIsLyrics', item.dataset.lyrics, item.dataset.artist, item.dataset.title)
-							}
-						}
-					})
-				}
-			}, 650)
+		// 					item.onkeydown = (e) => {
+		// 						if (e.key == "Enter" && item.dataset.lyrics) {
+		// 							if (item.dataset.lyrics !== "null") lyrics('titleIsLyrics', item.dataset.lyrics, item.dataset.artist, item.dataset.title)
+		// 						}
+		// 					}
+		// 				})
+		// 			}
+		// 		}, 650)
 
-			item.onblur = () => {
-				clearTimeout(focusTimeout)
-			}
-		}
+		// 		item.onblur = () => {
+		// 			clearTimeout(focusTimeout)
+		// 		}
+		// 	}
+		// }
 	}
 	if (focusFirstResult) app.search.result.querySelector('.list-item-icon').focus();
 
@@ -446,7 +451,7 @@ function displaySearchResults(results, focusFirstResult) {
 let filteredSongList = [];
 
 function filterSearch(songList, toggleByHTML) {
-	if(songList.length === 0) {
+	if (songList.length === 0) {
 		return "ERROR"
 	}
 	return new Promise((resolve, reject) => {

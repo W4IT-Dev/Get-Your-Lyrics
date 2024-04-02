@@ -1,5 +1,5 @@
 {
-    "version": "1.0.4",
+    "version": "1.0.5",
     "name": "Get Your Lyrics",
     "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title.",
     "type": "web",
