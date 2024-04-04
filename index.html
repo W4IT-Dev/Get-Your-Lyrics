@@ -7,7 +7,7 @@
     <title>Document</title>
 
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="app.css">
+    <!-- <link rel="stylesheet" href="app.css"> -->
 
     <script src="kui.js" defer></script>
     <script src="script.js" defer></script>
@@ -18,38 +18,43 @@
         <div class="content hidden" id="artistAndTitle">
             <div class="input-container">
                 <label class="input-container__label">Artist</label>
-                <input onfocus="softkeys('Search', 'LYRICS', '')" type="text" tabindex="0" class="input-container__input focusable" id="artist" />
+                <input onfocus="softkeys('Search', 'LYRICS', '')" type="text" tabindex="0"
+                    class="input-container__input focusable" id="artist" />
             </div>
             <div class="input-container">
                 <label class="input-container__label">Title</label>
-                <input onfocus="softkeys('Search', 'LYRICS', '')" type="text" tabindex="0" class="input-container__input focusable" id="title" />
+                <input onfocus="softkeys('Search', 'LYRICS', '')" type="text" tabindex="0"
+                    class="input-container__input focusable" id="title" />
             </div>
-            <div id="goToSearch" class="separator focusable" tabindex="0" onclick="go('search');" onfocus="softkeys('', 'SEARCH', '')" onkeydown="if(event.key === 'Enter'){go('search'); app.search.searchInput.value = ''; app.search.result.innerHTML = ''}">Don't know the artist/title? Search</div>
+            <!-- <div id="goToSearch" class="separator focusable" tabindex="0" onclick="go('search');" onfocus="softkeys('', 'SEARCH', '')" onkeydown="if(event.key === 'Enter'){go('search'); app.search.searchInput.value = ''; app.search.result.innerHTML = ''}">Don't know the artist/title? Search</div> -->
             <div class="button-container">
-                <button id="fetchLyrics" tabindex="0" class="button-container__button focusable" onclick="lyrics(app.byArtistAndTitle.artist.value, app.byArtistAndTitle.title.value);" onfocus="softkeys('Search','LYRICS','')">
+                <button id="fetchLyrics" tabindex="0" class="button-container__button focusable"
+                    onclick="lyrics(app.byArtistAndTitle.artist.value, app.byArtistAndTitle.title.value);"
+                    onfocus="softkeys('Search','LYRICS','')">
                     Get Lyrics
                 </button>
 
             </div>
             <div class="list-item focusable" tabindex="0" onfocus="softkeys('Search','SAVE','Preview')">
-                <p class="list-item__text" id="lyricsText" data-index></p>
+                <p style="text-wrap: wrap;" class="list-item__text" id="lyricsText" data-index></p>
             </div>
         </div>
 
         <div class="content " id="search">
             <div class="input-container">
-                <input type="text" tabindex="0" class="input-container__input focusable" id="searchInput" placeholder="Search"  onfocus="softkeys('', 'SEARCH');"/>
+                <input type="text" tabindex="0" class="input-container__input focusable" id="searchInput"
+                    placeholder="Search" onfocus="softkeys('', 'SEARCH');" />
             </div>
-            <div class="separator focusable" id="filterToggle" tabindex="0" onkeydown="if(event.key === 'Enter') { showOnlySongsWithAvaibleLyrics = !showOnlySongsWithAvaibleLyrics; filterSearch(searchResultCopy, true); }" style="font-size: 1.1rem;">Showing all results</div>
+            <!-- <div class="separator focusable" id="filterToggle" tabindex="0" onkeydown="if(event.key === 'Enter') { showOnlySongsWithAvaibleLyrics = !showOnlySongsWithAvaibleLyrics; filterSearch(searchResultCopy, true); }" style="font-size: 1.1rem;">Showing all results</div> -->
 
             <div id="searchResult"></div>
         </div>
 
-        <div class="softkeys" >
+        <div class="softkeys">
             <div class="softkey softkey-left"></div>
             <div class="softkey softkey-center">select</div>
             <div class="softkey softkey-right"></div>
-          </div>
+        </div>
     </div>
 </body>
 

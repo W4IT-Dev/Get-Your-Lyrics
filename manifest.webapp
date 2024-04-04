@@ -1,5 +1,5 @@
 {
-    "version": "1.0.5",
+    "version": "1.0.6",
     "name": "Get Your Lyrics",
     "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title.",
     "type": "web",
@@ -17,8 +17,23 @@
             "name": "Get Your Lyrics",
             "subtitle": "Wide collection of lyrics",
             "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title."
+        },
+        "de-DE": {
+            "name": "Songtexte",
+            "subtitle": "Große Sammlung von Songtexte",
+            "description": "Holen Sie sich einen Songtext basierend auf Titel und Künstler oder suchen Sie nach dem Lied, wenn Sie den Künstler oder Titel nicht kennen."
+        },
+        "es-ES": {
+            "name": "Letras de canciones",
+            "subtitle": "Amplia colección de letras",
+            "description": "Obtén una letra basada en el título y el artista o busca la canción si no conoces el artista o el título."
+        },
+        "es-US": {
+            "name": "Letras de canciones",
+            "subtitle": "Amplia colección de letras",
+            "description": "Obtén una letra basada en el título y el artista o busca la canción si no conoces el artista o el título."
         }
     },
-    "theme_color": "#171a4d",
+    "theme_color": "#232893",
     "default_locale": "en-US"
 }
