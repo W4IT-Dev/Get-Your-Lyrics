@@ -1,12 +1,12 @@
 {
-    "version": "1.0.6",
+    "version": "1.0.7",
     "name": "Get Your Lyrics",
     "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title.",
     "type": "web",
     "launch_path": "/index.html",
     "icons": {
-        "56": "/icon.png",
-        "112": "/icon.png"
+        "56": "/icon_56.png",
+        "112": "/icon_112.png"
     },
     "developer": {
         "name": "W4IT Dev",
