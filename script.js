@@ -3,7 +3,6 @@ const app = {
 		root: document.querySelector('#artistAndTitle'),
 		artist: document.querySelector('#artist'),
 		title: document.querySelector('#title'),
-		// insteadSearch: document.querySelector('#artistAndTitle .separator'),
 		fetchButton: document.querySelector('#fetchLyrics'),
 		result: document.querySelector('#lyricsText')
 	},
@@ -11,7 +10,6 @@ const app = {
 		root: document.querySelector('#search'),
 		searchInput: document.querySelector('#searchInput'),
 		result: document.querySelector('#searchResult')
-		// filterToggle: document.querySelector('#filterToggle')
 	},
 	softkeys: {
 		root: document.querySelector('.softkeys'),
@@ -22,34 +20,39 @@ const app = {
 }
 
 
-let showOnlySongsWithAvaibleLyrics = false;
-
 
 // KEYDOWN
 let searchTypeTimeout, currentScreen, HUDvisible = false, preview = new Audio();
-preview.mozAudioChannelManager.volumeControlChannel = 'content'
+if (preview.mozAudioChannelManager) preview.mozAudioChannelManager.volumeControlChannel = 'content'
+let searchTimeout;
+app.search.searchInput.onkeydown = (e) => {
+	if (e.key == 'Enter') clearTimeout(searchTimeout), search(app.search.searchInput.value);
+}
+
+app.search.searchInput.oninput = () => {
+	if (app.search.searchInput.value.length === 0) {
+		clearTimeout(searchTimeout);
+		app.search.result.innerHTML = '<h2 style=\'text-align: center; color: white;\'>Search artist or title</h2>'
+	} else {
+		clearTimeout(searchTimeout);
+		searchTimeout = setTimeout(() => { search(app.search.searchInput.value) }, 1650)
+	}
+}
 
 document.addEventListener('keyup', e => {
 	const focusedElement = document.activeElement;
 	// Go BACK
 
-	if (focusedElement.dataset.preview) {
+	if (focusedElement.dataset.preview && navigator.volumeManager) {
 		if (e.key == "1") HUDvisible = true, navigator.volumeManager.requestDown(), setTimeout(() => { HUDvisible = false }, 2001);
 		if (e.key == "3") HUDvisible = true, navigator.volumeManager.requestUp(), setTimeout(() => { HUDvisible = false }, 2001);
 	}
 	if (HUDvisible) return
-	if (e.key == "Backspace" && document.activeElement.nodeName !== "INPUT") e.preventDefault(), back()
+	if (e.key == "Backspace" && document.activeElement.nodeName !== "INPUT" && currentScreen === "byArtistAndTitle") e.preventDefault(), back()
 
 	// NAVIGATE
 	if (e.key == "ArrowDown") nav(1);
 	if (e.key == "ArrowUp") nav(-1);
-
-	// SEARCH
-	if (focusedElement === app.search.searchInput) {
-		if (e.key == "Enter") return clearTimeout(searchTypeTimeout), search(app.search.searchInput.value, true);
-		clearTimeout(searchTypeTimeout)
-		searchTypeTimeout = setTimeout(() => { search(app.search.searchInput.value, false) }, 1500)
-	}
 
 	// Play PREVIEW
 	if (e.key == "SoftRight") playPreview();
@@ -95,8 +98,9 @@ function back() {
 function nav(move) {
 	const currentIndex = document.activeElement;
 	const items = document.querySelectorAll('.focusable');
-	let currentElemIdx = [...items].indexOf(currentIndex);
-	if (move == -1 && currentElemIdx == -1) currentElemIdx = items.length
+	let currentElemIdx = [...items].indexOf(currentIndex)
+
+	// if (move == -1 && currentElemIdx == -1) currentElemIdx = items.length
 	const next = currentElemIdx + move;
 	let targetElement = items[next];
 	if (targetElement) targetElement.focus();
@@ -105,13 +109,16 @@ function nav(move) {
 
 // set softkeys
 function softkeys(left, center, right) {
-	if (left === "hideSoftkeys") app.softkeys.root.classList.add('hidden')
+	if (left === "{hideSoftkeys}") app.softkeys.root.classList.add('hidden')
 	else app.softkeys.root.classList.remove('hidden')
-	app.softkeys.left.innerHTML = left || ''
-	app.softkeys.center.innerHTML = center || ''
-	app.softkeys.right.innerHTML = right || ''
+	if (left !== "{old}") app.softkeys.left.innerHTML = left || ''
+	if (center !== "{old}") app.softkeys.center.innerHTML = center.toUpperCase() || ''
+	if (right !== "{old}") app.softkeys.right.innerHTML = right || ''
 }
 
+document.addEventListener('visibilitychange', () => {
+	if (document.visibilityState === "visible") go(currentScreen)
+})
 
 
 // == LYRICS by ARTIST & TITLE ==
@@ -210,9 +217,8 @@ function displaySearchResults(results, focusFirstResult) {
 	// app.search.filterToggle.innerText = showOnlySongsWithAvaibleLyrics === true ? "Only showing songs with avaible lyrics" : "Showing all results"
 	app.search.result.innerHTML = ""
 	if (typeof results !== "object") {
-		console.log('yes')
 		app.search.result.innerHTML = `
-		<div class="list-item-icon focusable" tabindex="0" onkeyup="if(event.key === 'Enter') { app.search.searchInput.focus(); };" onfocus="softkeys('', 'SEARCH','');" onblur="softkeys();">
+		<div class="list-item-icon focusable" tabindex="0" onkeyup="if(event.key === 'Enter') { app.search.searchInput.focus(); };" onfocus="softkeys('', '${translate('search')}','');" onblur="softkeys();">
     		<img src="/nothing_found.png" alt="" class="list-item-icon__icon" />
     		<div class="list-item-icon__text-container">
         		<p class="list-item__text">${results}</p>
@@ -226,7 +232,7 @@ function displaySearchResults(results, focusFirstResult) {
 		// GOHERE
 		app.search.result.innerHTML += `
 		<div class="list-item-icon focusable" tabindex="${i}"
-    onfocus="if (this.dataset.lyrics) {this.dataset.lyrics === 'null' ? softkeys('Search', 'RETRY', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');} else if (!this.dataset.lyrics || this.dataset.lyrics === 'null') {let focusTimeout;softkeys('Search', this.dataset.lyrics === 'null' ? 'RETRY' : '', 'Preview');focusTimeout = setTimeout(() => {let activeElement = document.activeElement;softkeys('Search', 'LOADING...', 'Preview');fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title).then((result) => {if (result.includes('ERROR')) return softkeys('Search', 'RETRY', 'Preview'), this.dataset.lyrics = 'null';if (activeElement === document.activeElement) { softkeys('Search', 'LYRICS', 'Preview'); } this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');this.onkeydown = (e) => {if (e.key == 'Enter' && this.dataset.lyrics) {if (this.dataset.lyrics !== 'null') app.byArtistAndTitle.result.parentNode.dataset.index = this.tabIndex, app.byArtistAndTitle.result.parentNode.dataset.preview = this.dataset.preview,lyrics('titleIsLyrics', this.dataset.lyrics, this.dataset.artist, this.dataset.title);}};});}, 650);this.onblur = () => { clearTimeout(focusTimeout); }}"
+    onfocus="if (this.dataset.lyrics) {this.dataset.lyrics === 'null' ? softkeys('${translate('search')}', '${translate('retry')}', '${translate('preview')}') : softkeys('${translate('search')}', '${translate('lyrics')}', '${translate('preview')}');} else if (!this.dataset.lyrics || this.dataset.lyrics === 'null') {let focusTimeout;softkeys('${translate('search')}', this.dataset.lyrics === 'null' ? '${translate('retry')}' : '', '${translate('preview')}');focusTimeout = setTimeout(() => {let activeElement = document.activeElement;softkeys('${translate('search')}', '${translate('search')}', '${translate('search')}');fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title).then((result) => {if (result.includes('ERROR')) return softkeys('${translate('search')}', '${translate('retry')}', '${translate('preview')}'), this.dataset.lyrics = 'null';if (activeElement === document.activeElement) { softkeys('${translate('search')}', '${translate('lyrics')}', '${translate('preview')}'); } this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');this.onkeydown = (e) => {if (e.key == 'Enter' && this.dataset.lyrics) {if (this.dataset.lyrics !== 'null') app.byArtistAndTitle.result.parentNode.dataset.index = this.tabIndex, app.byArtistAndTitle.result.parentNode.dataset.preview = this.dataset.preview,lyrics('titleIsLyrics', this.dataset.lyrics, this.dataset.artist, this.dataset.title);}};});}, 650);this.onblur = () => { clearTimeout(focusTimeout); }}"
     data-artist="${results[i].artist.name}" data-title="${results[i].title}"
     data-cover="${results[i].album.cover_small}" data-preview="${results[i].preview}" data-preview-Playing="false"
     data-current-preview="false">
@@ -238,44 +244,13 @@ function displaySearchResults(results, focusFirstResult) {
 </div>
 		`
 
-		// let item = document.querySelectorAll('.list-item-icon')[i]
-		// console.log(item)
-		// item.onfocus = () => {
-		// 	if (item.dataset.lyrics) {
-		// 		item.dataset.lyrics === "null" ? softkeys('Search', '', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');
-		// 	} else {
-		// 		let focusTimeout;
-		// 		softkeys('Search', '', 'Preview');
-		// 		focusTimeout = setTimeout(() => {
-		// 			let activeElement = document.activeElement
-		// 			softkeys('Search', 'LOADING...', 'Preview');
-		// 			if (item.dataset.lyrics) { softkeys('Search', 'LYRICS', 'Preview') } else {
-		// 				fetchLyricsByArtistAndTitle(item.dataset.artist, item.dataset.title).then((result) => {
-		// 					if (result.includes('Something went wrong')) return softkeys('Search', '', 'Preview'), item.dataset.lyrics = "null"
-		// 					if (activeElement == document.activeElement) {
-		// 						softkeys('Search', 'LYRICS', 'Preview');
-		// 					}
-		// 					item.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
 
-		// 					item.onkeydown = (e) => {
-		// 						if (e.key == "Enter" && item.dataset.lyrics) {
-		// 							if (item.dataset.lyrics !== "null") lyrics('titleIsLyrics', item.dataset.lyrics, item.dataset.artist, item.dataset.title)
-		// 						}
-		// 					}
-		// 				})
-		// 			}
-		// 		}, 650)
-
-		// 		item.onblur = () => {
-		// 			clearTimeout(focusTimeout)
-		// 		}
-		// 	}
-		// }
 	}
 	if (focusFirstResult) app.search.result.querySelector('.list-item-icon').focus();
 
 }
 let filteredSongList = [];
+let showOnlySongsWithAvaibleLyrics = false;
 
 function filterSearch(songList, toggleByHTML) {
 	if (songList.length === 0) {
@@ -337,79 +312,44 @@ function filterSearch(songList, toggleByHTML) {
 function playPreview() {
 	const focusedElement = document.activeElement;
 	if (focusedElement === app.byArtistAndTitle.result.parentNode) {
-		if (preview.src !== searchResultCopy[focusedElement.dataset.index].preview) preview.src = searchResultCopy[focusedElement.dataset.index].preview
-		preview.paused ? preview.play() : preview.pause()
+		if (preview.src !== searchResultCopy[focusedElement.dataset.index].preview) preview.src = searchResultCopy[focusedElement.dataset.index].preview, softkeys('{old}', '{old}', 'Loading...');
+
+		preview.oncanplaythrough = () => {
+			softkeys('{old}', '{old}', 'Preview')
+			preview.src.paused ? (preview.play(), softkeys('{old}', '{old}', 'Pause')) : (preview.pause(), softkeys('{old}', '{old}', 'Play'))
+		}
 		return
 	}
 	if (focusedElement.dataset.previewPlaying) { // check if song item
-		// console.log('exist')
 		if (preview.src) { // ALREADY SOURCE
-			// console.log('Src exist')
 			if (focusedElement.dataset.currentPreview === "false") {
 				console.warn('focused new song') // FOCUSED new song
-				// console.log('playing == false')
 				preview.pause(); console.log('pause old song') //pause old song
-				preview.src = focusedElement.dataset.preview; console.log('set new source') // set new source
-				preview.play(); console.log('play new song') // play new song
-				let a = document.querySelector("[data-preview-playing='true']")
-				let b = document.querySelector("[data-current-preview='true']")
-				if (a) a.dataset.previewPlaying = "false", console.log('set old previewPlaying to false') // set old song properties to false
-				if (b) b.dataset.currentPreview = "false", console.log('set old currentPreview to false')// set old song properties to false
-				focusedElement.dataset.previewPlaying = "true"; console.log('set NEW previewPlaying')// set NEW song properties to TRUE
-				focusedElement.dataset.currentPreview = "true"; console.log('set NEW currentPreview') // set NEW song properties to TRUE
-				return // get out of here
+
+
+				preview.src = focusedElement.dataset.preview, softkeys('{old}', '{old}', 'Loading...'); console.log('set new source') // set new source
+				preview.oncanplaythrough = () => {
+					softkeys('{old}', '{old}', 'Play')
+					preview.play(), softkeys('{old}', '{old}', 'Pause'); console.log('play new song') // play new song
+					let a = document.querySelector("[data-preview-playing='true']")
+					let b = document.querySelector("[data-current-preview='true']")
+					if (a) a.dataset.previewPlaying = "false", console.log('set old previewPlaying to false') // set old song properties to false
+					if (b) b.dataset.currentPreview = "false", console.log('set old currentPreview to false')// set old song properties to false
+					focusedElement.dataset.previewPlaying = "true"; console.log('set NEW previewPlaying')// set NEW song properties to TRUE
+					focusedElement.dataset.currentPreview = "true"; console.log('set NEW currentPreview') // set NEW song properties to TRUE
+					return // get out of here
+				}
 			}
-			// console.log('playing == true')
 			// currentPreview === "true"; focused playing song: play/pause
-			preview.paused === true ? (preview.play(), focusedElement.dataset.previewPlaying = "false") : (preview.pause(), focusedElement.dataset.previewPlaying = "true");
+			preview.paused === true ? (preview.play(), focusedElement.dataset.previewPlaying = "false", softkeys('Search', 'SAVE', 'Pause')) : (preview.pause(), focusedElement.dataset.previewPlaying = "true", softkeys('Search', 'SAVE', 'Play'));
 		} else {//no source given
-			// console.log('no src')
-			preview.src = focusedElement.dataset.preview//set source
-			preview.play();//play song
-			focusedElement.dataset.currentPreview = "true"// set propoerties
-			focusedElement.dataset.previewPlaying = "true"
+			preview.src = focusedElement.dataset.preview, softkeys('{old}', '{old}', 'Loading...')//set source
+			preview.oncanplaythrough = () => {
+				softkeys('{old}', '{old}', 'Play')
+				preview.play(), softkeys('{old}', '{old}', 'Pause');//play song
+				focusedElement.dataset.currentPreview = "true"// set propoerties
+				focusedElement.dataset.previewPlaying = "true"
+			}
 		}
 	}
 }
-// GOHERE
-
-
-// FOCUS
-// if (this.dataset.lyrics && this.dataset.lyrics !== 'null') {
-// 	this.dataset.lyrics === 'null' ? softkeys('Search', 'RETRY', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');
-// } else if (!this.dataset.lyrics || this.dataset.lyrics === 'null') {
-// 	let focusTimeout; softkeys('Search', this.dataset.lyrics === 'null' ? 'RETRY' : '', 'Preview');
-// 	focusTimeout = setTimeout(() => {
-// 		let activeElement = document.activeElement;
-// 		softkeys('Search', 'LOADING...', 'Preview');
-// 		fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title).then((result) => {
-// 			if (result.includes('ERROR')) return softkeys('Search', 'RETRY', 'Preview'), this.dataset.lyrics = 'null';
-// 			if (activeElement === document.activeElement) {
-// 				softkeys('Search', 'LYRICS', 'Preview');
-// 			}
-// 			this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
-// 			this.onkeydown = (e) => {
-// 				if (e.key == 'Enter' && this.dataset.lyrics) {
-// 					if (this.dataset.lyrics === 'null') {
-// 						softkeys('Search', 'LOADING...', 'Preview');
-// 						fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title).then((result) => {
-// 							if (result.includes('ERROR')) return softkeys('Search', '', 'Preview'), this.dataset.lyrics = 'null';
-// 							if (activeElement === document.activeElement) {
-// 								softkeys('Search', 'LYRICS', 'Preview');
-// 							}
-// 							this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
-// 							this.onkeydown = (e) => {
-// 								if (e.key == 'Enter' && this.dataset.lyrics) {
-// 									if (this.dataset.lyrics === 'null')
-// 										if (this.dataset.lyrics !== 'null') app.byArtistAndTitle.result.parentNode.dataset.preview = this.dataset.preview, lyrics('titleIsLyrics', this.dataset.lyrics, this.dataset.artist, this.dataset.title);
-// 								}
-// 							};
-// 						});
-// 					} else { app.byArtistAndTitle.result.parentNode.dataset.preview = this.dataset.preview, lyrics('titleIsLyrics', this.dataset.lyrics, this.dataset.artist, this.dataset.title); }
-// 				}
-// 			};
-// 		});
-// 	}, 650); this.onblur = () => {
-// 		clearTimeout(focusTimeout);
-// 	}
-// }

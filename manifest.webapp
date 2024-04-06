@@ -4,6 +4,7 @@
     "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title.",
     "type": "web",
     "launch_path": "/index.html",
+    "theme_color": "#232893",
     "icons": {
         "56": "/icon_56.png",
         "112": "/icon_112.png"
@@ -11,7 +12,12 @@
     "developer": {
         "name": "W4IT Dev",
         "url": "http://github.com/W4IT-Dev/get-your-lyrics"
-    }, 
+    },
+    "permissions": {
+        "volumemanager": {
+            "description": "volume."
+        }
+    },
     "locales": {
         "en-US": {
             "name": "Get Your Lyrics",
@@ -34,6 +40,5 @@
             "description": "Obtén una letra basada en el título y el artista o busca la canción si no conoces el artista o el título."
         }
     },
-    "theme_color": "#232893",
     "default_locale": "en-US"
 }

@@ -1,10 +1,5 @@
 /* black blue #05081c */
 /* gold #E5B80B */
-#header,
-.toast {
-    text-align: center;
-    vertical-align: middle
-}
 
 .list-item-icon__text,
 .list-item-icon__text-container,
@@ -13,48 +8,12 @@
     text-overflow: ellipsis
 }
 
-#header,
-.separator,
-.toast {
-    vertical-align: middle
-}
-
-.checkbox-container__checkbox::after,
-.radio-container__radio::after,
-.radio-container__radio::before {
-    content: "";
-    visibility: hidden
-}
-
-#header,
-.button-container__button,
-.checkbox-container__subtext::first-letter,
-.checkbox-container__text::first-letter,
-.list-item-icon__subtext::first-letter,
-.list-item-icon__text::first-letter,
-.list-item-indicator__subtext::first-letter,
-.list-item-indicator__text::first-letter,
-.list-item__subtext::first-letter,
-.list-item__text::first-letter,
-.progress-container__label::first-letter,
-.radio-container__subtext::first-letter,
-.radio-container__text::first-letter,
-.separator,
-.slider-container__text::first-letter,
-.softkey-left {
-    text-transform: var(--capitalization)
-}
 
 :root {
     font-family: "Open Sans", sans-serif;
     font-size: 10px;
-    --capitalization: none;
     --content-overflow: auto;
     --app-background: rgb(15, 17, 38);
-    --toast-background: #fbfbfb;
-    --toast-color: #ffffff;
-    --header-background: #1f3374;
-    --header-color: #ffffff;
     --softkeys-background: #cccccc;
     --softkeys-color: #323232;
     --item-background: rgb(15, 17, 38);
@@ -68,20 +27,6 @@
     --button-color: white;
     --button-background-focused: rgb(244, 197, 12);
     --button-color-focused: #ffffff;
-    --checkbox-color: #873eff;
-    --checkbox-color-focused: #ffffff;
-    --radio-color: #873eff;
-    --radio-color-focused: #ffffff;
-    --slider-color: #aaaaaa;
-    --slider-color-selected: #873eff;
-    --slider-focused-color: #aaaaaa;
-    --slider-focused-selected: #ffffff;
-    --progress-color: #aaaaaa;
-    --progress-color-selected: #873eff;
-    --progress-focused-color: #aaaaaa;
-    --progress-focused-selected: #ffffff;
-    --separator-background: rgb(23, 26, 77);
-    --separator-color: white;
     --textarea-height: 15rem
 }
 
@@ -133,11 +78,11 @@
     color: var(--item-subtext-color)
 }
 
-*:focus .list-item__text{
+.list-item-icon:focus .list-item__text{
     color: var(--item-focused-text-color);
 }
 
-*:focus .list-item__subtext{
+.list-item-icon:focus .list-item__subtext{
     color: var(--item-focused-subtext-color);
 }
 .list-item-icon:focus,
@@ -259,8 +204,8 @@ html {
 
 
 #header {
-    line-height: 2.8rem;
-    height: 2.8rem;
+    line-height: 3rem;
+    height: 3rem;
     padding: 0 1rem;
     background: var(--header-background);
     color: var(--header-color);

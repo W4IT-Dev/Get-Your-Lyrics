@@ -1,0 +1,14 @@
+{
+    "app_name": "Sanoitukset",
+    "search": "Etsi",
+    "search_verb": "Etsi",
+    "lyrics": "Sanat",
+    "preview": "Esikatselu",
+    "loading": "Kuormat",
+    "play": "Pelaa",
+    "pause": "Tauko",
+    "artist": "Taiteilijat",
+    "title": "Otsikko",
+    "save": "Tallenna",
+    "get_lyrics": "Lataa sanoitukset"
+}

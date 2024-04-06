@@ -1,0 +1,14 @@
+{
+    "app_name": "Laulu sõnad",
+    "search": "Otsi",
+    "search_verb": "Otsi",
+    "lyrics": "laulusõnad",
+    "preview": "Eelvaade",
+    "loading": "Load",
+    "play": "Mängi",
+    "pause": "Paus",
+    "artist": "Kunstnikud",
+    "title": "Pealkiri",
+    "save": "Salvesta",
+    "get_lyrics": "Laadige laulusõnu"
+}
