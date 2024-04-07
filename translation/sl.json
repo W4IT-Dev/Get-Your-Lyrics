@@ -1,0 +1,14 @@
+{
+    "app_name": "Besedila",
+    "search": "Iskanje",
+    "search_verb": "Iskanje",
+    "lyrics": "Besedila",
+    "preview": "Predogled",
+    "loading": "Obremenitve",
+    "play": "Predvajanje",
+    "pause": "Prekinitev",
+    "artist": "Umetniki",
+    "title": "Ime",
+    "save": "Shrani", 
+    "get_lyrics": "Nalaganje besedil"
+}

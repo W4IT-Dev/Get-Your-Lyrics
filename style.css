@@ -478,11 +478,11 @@ html {
 .softkey-left {
     font-size: 1.4rem;
     text-align: start;
-    width: 33%;
+    width: 31%;
 }
 
 .softkey-center {
-    width: 34%;
+    width: 38%;
     font-size: 1.75rem;
     font-weight: 700;
     text-align: center;
@@ -492,7 +492,7 @@ html {
 .softkey-right {
     font-size: 1.4rem;
     text-align: end;
-    width: 33%;
+    width: 31%;
 }
 
 @media only screen and (orientation:portrait) {

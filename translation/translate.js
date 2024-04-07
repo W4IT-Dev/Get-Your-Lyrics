@@ -1,5 +1,18 @@
-const supportedLanguages = ["ar", "bg", "da", "de", "el", "en", "es", "et", "fi", "fr", "id", "it", "lt", "nl", "ru", "zh"];
-let translations = {};
+const supportedLanguages = ["ar", "bg", "da", "de", "el", "en", "es", "et", "fi", "fr", "id", "it", "lt", "nl", "pl", "pt-BR", "pt", "ro", "ru", "sk", "sl", "sv", "zh"];//REDO
+let translations = {
+    "app_name": "Get Your Lyrics",
+    "search": "Search",
+    "search_verb": "Search",
+    "lyrics": "Lyrics",
+    "preview": "Preview",
+    "loading": "Loading",
+    "play": "Play",
+    "pause": "Pause",
+    "artist": "Artist",
+    "title": "Title",
+    "save": "Save",
+    "get_lyrics": "Get Lyrics"
+};
 
 const loadLanguageFile = language => new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -27,7 +40,16 @@ const updateUIWithTranslations = () => {
     const elementsToTranslate = Array.from(document.querySelectorAll('[data-translate]'));
     elementsToTranslate.forEach(element => {
         const key = element.getAttribute('data-translate');
-        // element.innerText = translate(key);
+        let keyTranslation = translate(key)
+        switch (element.nodeName) {
+            case "INPUT":
+                element.placeholder = keyTranslation
+                break;
+
+            default:
+                element.innerText = keyTranslation
+                break;
+        }
     });
 
 };

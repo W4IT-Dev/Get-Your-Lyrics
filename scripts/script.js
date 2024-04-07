@@ -26,7 +26,7 @@ let searchTypeTimeout, currentScreen, HUDvisible = false, preview = new Audio();
 if (preview.mozAudioChannelManager) preview.mozAudioChannelManager.volumeControlChannel = 'content'
 let searchTimeout;
 app.search.searchInput.onkeydown = (e) => {
-	if (e.key == 'Enter') clearTimeout(searchTimeout), search(app.search.searchInput.value);
+	if (e.key == 'Enter') clearTimeout(searchTimeout), search(app.search.searchInput.value, true);
 }
 
 app.search.searchInput.oninput = () => {
@@ -341,7 +341,11 @@ function playPreview() {
 				}
 			}
 			// currentPreview === "true"; focused playing song: play/pause
-			preview.paused === true ? (preview.play(), focusedElement.dataset.previewPlaying = "false", softkeys('Search', 'SAVE', 'Pause')) : (preview.pause(), focusedElement.dataset.previewPlaying = "true", softkeys('Search', 'SAVE', 'Play'));
+			// if(preview.paused === true) {
+			// 	preview.play();
+			// 	focusedElement.dataset.previewPlaying = "false";
+			// }
+			preview.paused === true ? (preview.play(), focusedElement.dataset.previewPlaying = "false", softkeys('{old}', '{old}', 'Pause')) : (preview.pause(), focusedElement.dataset.previewPlaying = "true", softkeys('{old}', '{old}', 'Play'));
 		} else {//no source given
 			preview.src = focusedElement.dataset.preview, softkeys('{old}', '{old}', 'Loading...')//set source
 			preview.oncanplaythrough = () => {

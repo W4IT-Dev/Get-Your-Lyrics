@@ -1,0 +1,14 @@
+{
+    "app_name": "Texty piesní",
+    "search": "hľadanie",
+    "search_verb": "Vyhľadávanie",
+    "lyrics": "Texty",
+    "preview": "Náhľad",
+    "loading": "Zaťaženia",
+    "play": "Prehrávanie",
+    "pause": "Pauza",
+    "artist": "Umelci",
+    "title": "Názov",
+    "save": "Uložiť",
+    "get_lyrics": "Načítanie textov"
+}

@@ -1,0 +1,14 @@
+{
+    "app_name": "Tekst piosenki",
+    "search": "Wyszukiwanie",
+    "search_verb": "Wyszukiwanie",
+    "lyrics": "Tekst",
+    "preview": "Podgląd",
+    "loading": "Obciążenia",
+    "play": "Grać",
+    "pause": "Pauza",
+    "artist": "Artyści",
+    "title": "Tytuł",
+    "save": "Zapisz",
+    "get_lyrics": "Tekst piosenki"
+}
