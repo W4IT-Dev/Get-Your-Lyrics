@@ -13,28 +13,73 @@
     font-family: "Open Sans", sans-serif;
     font-size: 10px;
     --content-overflow: auto;
-    --app-background: rgb(15, 17, 38);
+    --app-background: rgb(18, 21, 60);
     --softkeys-background: #cccccc;
     --softkeys-color: #323232;
-    --item-background: rgb(15, 17, 38);
+    --item-background: rgb(18, 21, 60);
     --item-text-color: #ffffff;
     --item-subtext-color: #a3a3a3;
-    --item-focused-background: rgb(243, 197, 15);
+    --item-focused-background: rgb(249, 203, 16);
     --item-focused-text-color: #000000;
     --item-focused-subtext-color: #121212;
     --arrow-color: #000000;
     --button-background: rgb(28, 35, 113);
     --button-color: white;
-    --button-background-focused: rgb(244, 197, 12);
+    --button-background-focused: rgb(4, 0, 121);
     --button-color-focused: #ffffff;
-    --textarea-height: 15rem
 }
 
 #header,
 .list-item__text,
 .toast {
-    font-size: 1.7rem
+    font-size: 1.85rem
 }
+
+.kui-toast {
+    animation: toaster 0.3s;
+    min-height: 42px;
+    line-height: 42px;
+    color: #fff;
+    text-align: center;
+    background-color: #323232;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    display: none;
+    z-index: 10000;
+    font-size: 18px;
+}
+
+.kui-toast .kui-pri {
+    margin: 0;
+}
+
+
+@keyframes toaster {
+    from {
+        transform: translateY(-50px);
+    }
+
+    to {
+        transform: none;
+    }
+}
+
+@keyframes gatst {
+    from {
+        transform: none;
+
+    }
+
+    to {
+        transform: translateY(-50px);
+    }
+}
+
+.byetoast {
+    animation: gatst 0.5s;
+}
+
 
 .focusable:focus {
     outline: 0
@@ -42,19 +87,6 @@
 
 .hidden {
     display: none !important
-}
-
-.button-container,
-.checkbox-container,
-.input-container,
-.list-item,
-.list-item-icon,
-.list-item-indicator,
-.progress-container,
-.radio-container,
-.slider-container,
-.textarea-container {
-    background: var(--item-background)
 }
 
 .checkbox-container__text,
@@ -78,13 +110,14 @@
     color: var(--item-subtext-color)
 }
 
-.list-item-icon:focus .list-item__text{
+.list-item-icon:focus .list-item__text {
     color: var(--item-focused-text-color);
 }
 
-.list-item-icon:focus .list-item__subtext{
+.list-item-icon:focus .list-item__subtext {
     color: var(--item-focused-subtext-color);
 }
+
 .list-item-icon:focus,
 .list-item-indicator:focus,
 .list-item:focus,
@@ -143,52 +176,6 @@ html {
     height: calc(100% - 3rem)
 }
 
-/* ============== Toast ============== */
-.kui-toast {
-    animation: toaster 0.3s;
-    min-height: 42px;
-    line-height: 42px;
-    color: #fff;
-    text-align: center;
-    background-color: #323232;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    display: none;
-    z-index: 10000;
-    font-size: 18px;
-}
-
-.kui-toast .kui-pri {
-    margin: 0;
-}
-
-
-@keyframes toaster {
-    from {
-        transform: translateY(-50px);
-    }
-
-    to {
-        transform: none;
-    }
-}
-
-@keyframes gatst {
-    from {
-        transform: none;
-
-    }
-
-    to {
-        transform: translateY(-50px);
-    }
-}
-
-.byetoast {
-    animation: gatst 0.5s;
-}
-
 .list-item,
 .list-item-indicator,
 .radio-container {
@@ -200,16 +187,6 @@ html {
 
 .list-item-indicator {
     height: 4rem;
-}
-
-
-#header {
-    line-height: 3rem;
-    height: 3rem;
-    padding: 0 1rem;
-    background: var(--header-background);
-    color: var(--header-color);
-    font-weight: 400
 }
 
 .list-item {
@@ -226,10 +203,7 @@ html {
 
 .list-item-icon__subtext,
 .list-item__subtext {
-    /* overflow: hidden; */
-    /* white-space: nowrap; */
-    /* text-overflow: ellipsis; */
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 400;
     margin: 0
 }
@@ -270,7 +244,6 @@ html {
     border-width: 0 .2rem .2rem 0;
     display: inline-block;
     transform: rotate(-45deg);
-    /* top: 50% */
 }
 
 .list-item-indicator:focus>.list-item-indicator__indicator {
@@ -281,7 +254,7 @@ html {
     position: relative;
     box-sizing: border-box;
     padding: .5rem;
-    height: 6rem;
+    height: 6.2rem;
     display: flex;
     align-items: center
 }
@@ -303,8 +276,8 @@ html {
 }
 
 .list-item-icon__icon {
-    height: 3.2rem;
-    width: 3.2rem
+    height: 3.35rem;
+    width: 3.35rem
 }
 
 .separator {
@@ -315,11 +288,6 @@ html {
     font-weight: 400;
     background: var(--separator-background);
     color: var(--separator-color)
-}
-
-.separator:focus {
-    background: rgba(229, 184, 11, 0.95);
-    color: black;
 }
 
 .checkbox-container__checkbox,
@@ -340,20 +308,6 @@ html {
     opacity: 0
 }
 
-.radio-container__radio::before {
-    clip-path: url("/checkboxes-radios/radio-off-kaios-2.5.3.svg#radio")
-}
-
-.radio-container__input:checked+.radio-container__radio,
-.radio-container__radio::after {
-    clip-path: url("/checkboxes-radios/radio-on-kaios-2.5.3.svg#radio")
-}
-
-.radio-container__input+.radio-container__radio {
-    background: var(--radio-color);
-    clip-path: url("/checkboxes-radios/radio-off-kaios-2.5.3.svg#radio")
-}
-
 .checkbox-container {
     position: relative;
     box-sizing: border-box;
@@ -363,23 +317,6 @@ html {
     flex-direction: column;
     justify-content: center
 }
-
-.checkbox-container__checkbox::before {
-    content: "";
-    visibility: hidden;
-    clip-path: url("/checkboxes-radios/checkbox-off-kaios-2.5.3.svg#checkbox")
-}
-
-.checkbox-container__checkbox::after,
-.checkbox-container__input:checked+.checkbox-container__checkbox {
-    clip-path: url("/checkboxes-radios/checkbox-on-kaios-2.5.3.svg#checkbox")
-}
-
-.checkbox-container__input+.checkbox-container__checkbox {
-    background: var(--checkbox-color);
-    clip-path: url("/checkboxes-radios/checkbox-off-kaios-2.5.3.svg#checkbox")
-}
-
 
 .button-container {
     padding: 0 1rem 1rem
@@ -416,6 +353,7 @@ html {
     height: 30px
 }
 
+
 .button-container__button:focus {
     background: var(--button-background-focused);
     color: var(--button-color-focused)
@@ -427,23 +365,22 @@ html {
 
 .input-container,
 .textarea-container {
-    padding: 1rem;
+    padding: 1.05rem 1rem;
 }
 
 .input-container__input,
 .textarea-container__textarea {
     padding: 0 .3rem;
-    /* margin-top: .5rem; */
     width: 100%;
-    font-size: 1.7rem;
+    font-size: 1.9rem;
     font-weight: 400;
     outline: 0;
     box-sizing: border-box;
-    display: block
+    display: block;
 }
 
 .input-container__input {
-    height: 3.6rem
+    height: 3.85rem
 }
 
 .textarea-container__textarea {

@@ -1,9 +1,8 @@
 // byArtistAndTitle screen
-app.byArtistAndTitle.artist.onfocus = () => { softkeys(translate('search'), translate('lyrics'),) }
-app.byArtistAndTitle.title.onfocus = () => { softkeys(translate('search'), translate('lyrics'),) }
-app.byArtistAndTitle.fetchButton.onfocus = () => { softkeys('', translate('lyrics'),) }
-app.byArtistAndTitle.result.parentNode.onfocus = () => { softkeys(translate('search'), translate('save'), preview.src === document.activeElement.dataset.preview ? ((preview.paused ? translate('play') : translate('pause'))) : (translate('preview'))) }
+app.byArtistAndTitle.artist.onfocus = () => { softkeys('Search', 'LYRICS',) }
+app.byArtistAndTitle.title.onfocus = () => { softkeys('Search', 'LYRICS',) }
+app.byArtistAndTitle.fetchButton.onfocus = () => { softkeys('', 'LYRICS',) }
+app.byArtistAndTitle.result.parentNode.onfocus = () => { softkeys('Search', 'SAVE', preview.src === document.activeElement.dataset.preview ? ((preview.paused ? 'Play' : 'Pause')) : ('Preview')) }
 
 // search screen
-app.search.searchInput.onfocus = () => { softkeys('', translate('search_verb')) }
-
+app.search.searchInput.onfocus = () => { softkeys('', 'Search', '') }

@@ -1,21 +1,24 @@
 {
-    "version": "1.0.8.1",
+    "version": "0.0.2",
     "name": "Get Your Lyrics",
     "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title.",
     "type": "web",
     "launch_path": "/index.html",
     "theme_color": "#232893",
     "icons": {
-        "56": "/icon_56.png",
-        "112": "/icon_112.png"
+        "56": "/assets/icons/icon_56.png",
+        "112": "/assets/icons/icon_112.png"
     },
     "developer": {
         "name": "W4IT Dev",
-        "url": "http://github.com/W4IT-Dev/get-your-lyrics"
+        "url": "http://github.com/W4IT-Dev/Get-Your-Lyrics"
     },
     "permissions": {
         "volumemanager": {
-            "description": "volume."
+            "description": "Required to manage volume by using the keys 1 and 3."
+        },
+        "audio-channel-content": {
+            "description": "Audio."
         }
     },
     "locales": {
@@ -28,16 +31,6 @@
             "name": "Songtexte",
             "subtitle": "Große Sammlung von Songtexte",
             "description": "Holen Sie sich einen Songtext basierend auf Titel und Künstler oder suchen Sie nach dem Lied, wenn Sie den Künstler oder Titel nicht kennen."
-        },
-        "es-ES": {
-            "name": "Letras de canciones",
-            "subtitle": "Amplia colección de letras",
-            "description": "Obtén una letra basada en el título y el artista o busca la canción si no conoces el artista o el título."
-        },
-        "es-US": {
-            "name": "Letras de canciones",
-            "subtitle": "Amplia colección de letras",
-            "description": "Obtén una letra basada en el título y el artista o busca la canción si no conoces el artista o el título."
         }
     },
     "default_locale": "en-US"
