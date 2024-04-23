@@ -27,6 +27,20 @@ if (!navigator.onLine) {
 	go('offline')
 }
 
+window.onoffline = (event) => {
+	console.log(event)
+	showToast("You're offline", 2000, '323232')
+};
+
+window.ononline = (e) => {
+	console.log(e)
+	showToast("You're back online", 2000, '323232')
+}
+
+document.addEventListener('keydown', e=>{
+	if(e.key=="#") window.open('/about.html')
+})
+
 // KEYDOWN
 let searchTypeTimeout, currentScreen, HUDvisible = false, preview = new Audio();
 if (preview.mozAudioChannelManager) preview.mozAudioChannelManager.volumeControlChannel = 'content'

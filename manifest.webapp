@@ -1,17 +1,17 @@
 {
-    "version": "0.0.2",
+    "version": "0.0.9",
     "name": "Get Your Lyrics",
-    "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title.",
+    "description": "Get Your Lyrics is the ultimate app for exploring song lyrics on your KaiOS device. Whether you're searching by artist, title, or just curious about a song, it's got you covered. Read through the lyrics and even listen to a quick 30-second preview to get a feel for the tune. Ready to explore? Download Get Your Lyrics now and let the journey begin!",
     "type": "web",
     "launch_path": "/index.html",
-    "theme_color": "#232893",
+    "theme_color": "#12153c",
     "icons": {
         "56": "/assets/icons/icon_56.png",
         "112": "/assets/icons/icon_112.png"
     },
     "developer": {
         "name": "W4IT Dev",
-        "url": "http://github.com/W4IT-Dev/Get-Your-Lyrics"
+        "url": "https://github.com/W4IT-Dev/Get-Your-Lyrics"
     },
     "permissions": {
         "volumemanager": {
@@ -24,13 +24,8 @@
     "locales": {
         "en-US": {
             "name": "Get Your Lyrics",
-            "subtitle": "Wide collection of lyrics",
-            "description": "Get a lyrics based on title and artist or search for the song if you dont know the artist or title."
-        },
-        "de-DE": {
-            "name": "Songtexte",
-            "subtitle": "Große Sammlung von Songtexte",
-            "description": "Holen Sie sich einen Songtext basierend auf Titel und Künstler oder suchen Sie nach dem Lied, wenn Sie den Künstler oder Titel nicht kennen."
+            "subtitle": "Wide collection of song lyrics",
+            "description": "Get Your Lyrics is the ultimate app for exploring song lyrics on your KaiOS device. Whether you're searching by artist, title, or just curious about a song, it's got you covered. Read through the lyrics and even listen to a quick 30-second preview to get a feel for the tune. Ready to explore? Download Get Your Lyrics now and let the journey begin!"
         }
     },
     "default_locale": "en-US"

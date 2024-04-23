@@ -2,7 +2,6 @@
 function fetchLyricsByArtistAndTitle(artist, title) {
 	return fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
 		.then((response) => {
-			// console.log(response)
 			if (response.status.toString().startsWith('5')) {
 				throw new Error('ERROR: Something is wrong with the server')
 			}

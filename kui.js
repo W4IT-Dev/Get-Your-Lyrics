@@ -20,15 +20,17 @@ function showToast(text, time, color) {
   const toast = document.querySelector(".kui-toast")
   toast.style.background = "#" + color
   document.querySelector("meta[name=theme-color]").setAttribute("content", '#' + color);
-  toast.style.display = "block";
-  document.querySelector(".kui-pri").innerHTML = text;
+  setTimeout(() => {
+    toast.style.display = "block";
+    document.querySelector(".kui-pri").innerHTML = text;
+  }, 82)
   setTimeout(function () {
     toast.classList.add("byetoast")
     setTimeout(function () {
       toast.style.display = "none";
       toast.classList.remove("byetoast");
     }, 500);
-    document.querySelector("meta[name=theme-color]").setAttribute("content", '#1f3374');
+    document.querySelector("meta[name=theme-color]").setAttribute("content", '#12153c');
 
-  }, time);
+  }, time + 82);
 }
