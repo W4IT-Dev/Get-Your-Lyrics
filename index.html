@@ -55,9 +55,23 @@
         </div>
 
         <div class="content hidden" id="offline">
-            <h1>You arent connected to internet</h1>
-            <button class="focusable" tabindex="0">Open settings</button>
+            <div class="list-item" tabindex="0">
+                <p class="list-item__text" style="text-overflow: unset; white-space: wrap;">You aren't connected to
+                    internet</p>
+            </div>
+            <div class="button-container">
+                <button tabindex="0" class="button-container__button focusable" onclick="let request = new MozActivity({
+                    name: 'configure',
+                    data: {
+                        target: 'device',
+                        section: 'wifi'
+                    },
+                });">
+                    Open Settings
+                </button>
+            </div>
         </div>
+
         <div class="softkeys">
             <div class="softkey softkey-left"></div>
             <div class="softkey softkey-center"></div>

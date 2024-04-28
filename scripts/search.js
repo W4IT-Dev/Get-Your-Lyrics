@@ -63,8 +63,9 @@ function displaySearchResults(results, focusFirstResult) {
 					let activeElement = document.activeElement;softkeys('Search', 'LOADING', 'Search');
 				fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title)
 				.then((result) => {
-					if (result.includes('ERROR')) return showToast('No lyrics found', 1750,'ee1102'), softkeys('Search', '', 'Preview'), this.dataset.lyrics = 'null';
+					
 					if (activeElement === document.activeElement) { softkeys('Search', 'LYRICS', 'Preview');
+                    if (result.includes('ERROR')) return showToast('No lyrics found', 1750,'ee1102'), softkeys('Search', '', 'Preview'), this.dataset.lyrics = 'null';
 					 } 
 					 this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
 					 this.onkeydown = (e) => {
@@ -74,14 +75,14 @@ function displaySearchResults(results, focusFirstResult) {
 						});
 						}, 650);
 						this.onblur = () => { clearTimeout(focusTimeout); }}" data-artist="${results[i].artist.name}"
-		data-title="${results[i].title}" data-cover="${results[i].album.cover_small}" data-preview="${results[i].preview}"
-		data-preview-Playing="false" data-current-preview="false">
-		<img src="${results[i].album.cover_small}" alt="" class="list-item-icon__icon" />
-		<div class="list-item-icon__text-container">
-			<p class="list-item__text">${results[i].title}</p>
-			<p class="list-item__subtext">${results[i].artist.name}</p>
-		</div>
-	</div>
+            data-title="${results[i].title}" data-cover="${results[i].album.cover_small}"
+            data-preview="${results[i].preview}" data-preview-Playing="false" data-current-preview="false">
+            <img src="${results[i].album.cover_small}" alt="" class="list-item-icon__icon" />
+            <div class="list-item-icon__text-container">
+                <p class="list-item__text">${results[i].title}</p>
+                <p class="list-item__subtext">${results[i].artist.name}</p>
+            </div>
+        </div>
 		`
 
 

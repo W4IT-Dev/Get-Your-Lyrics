@@ -30,7 +30,8 @@ function showToast(text, time, color) {
       toast.style.display = "none";
       toast.classList.remove("byetoast");
     }, 500);
-    document.querySelector("meta[name=theme-color]").setAttribute("content", '#12153c');
-
+    setTimeout(() => {
+      document.querySelector("meta[name=theme-color]").setAttribute("content", '#0f1126');
+    }, 49);
   }, time + 82);
 }

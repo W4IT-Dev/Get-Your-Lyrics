@@ -37,8 +37,8 @@ window.ononline = (e) => {
 	showToast("You're back online", 2000, '323232')
 }
 
-document.addEventListener('keydown', e=>{
-	if(e.key=="#") window.open('/about.html')
+document.addEventListener('keydown', e => {
+	if (e.key == "#") window.open('/about.html')
 })
 
 // KEYDOWN
@@ -152,7 +152,7 @@ function playPreview() {
 		if (preview.src !== searchResultCopy[focusedElement.dataset.index].preview) preview.src = searchResultCopy[focusedElement.dataset.index].preview, softkeys('{old}', '{old}', 'Loading...');
 
 		preview.oncanplaythrough = () => {
-			softkeys('{old}', '{old}', 'Preview')
+			softkeys('{old}', '{old}', '{old}')
 			preview.play();
 		}
 		preview.paused ? (preview.play(), softkeys('{old}', '{old}', 'Pause')) : (preview.pause(), softkeys('{old}', '{old}', 'Play'))
