@@ -29,7 +29,7 @@ if (!navigator.onLine) {
 
 window.onoffline = (event) => {
 	console.log(event)
-	showToast("You're offline", 2000, '323232')
+	showToast("You're offline<br>Press 0 to open settings.", 2000, '323232')
 };
 
 window.ononline = (e) => {
@@ -39,6 +39,15 @@ window.ononline = (e) => {
 
 document.addEventListener('keydown', e => {
 	if (e.key == "#") window.open('/about.html')
+	if (e.key == "0" && !navigator.onLine) {
+		let request = new MozActivity({
+			name: 'configure',
+			data: {
+				target: 'device',
+				section: 'wifi'
+			},
+		});
+	}
 })
 
 // KEYDOWN
@@ -136,8 +145,9 @@ function nav(move) {
 function softkeys(left, center, right) {
 	if (left === "{hideSoftkeys}") app.softkeys.root.classList.add('hidden')
 	else app.softkeys.root.classList.remove('hidden')
+	if (center) center = center.toUpperCase();
 	if (left !== "{old}") app.softkeys.left.innerHTML = left || ''
-	if (center !== "{old}") app.softkeys.center.innerHTML = center.toUpperCase() || ''
+	if (center !== "{old}") app.softkeys.center.innerHTML = center || ''
 	if (right !== "{old}") app.softkeys.right.innerHTML = right || ''
 }
 

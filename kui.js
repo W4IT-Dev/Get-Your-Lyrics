@@ -9,7 +9,7 @@ const callFunction = (callback, e) => {
     callback(element.parentElement);
 };
 
-const blur = (element) => element.classList.remove("selected");
+const blur = (element) => (element.classList.remove("selected"), softkeys('{hideSoftkeys}'));
 
 const focus = (element) => element.classList.add("selected");
 

@@ -32,8 +32,10 @@ function lyrics(artist, title, titleIsLyrics_Artist, titleIsLyrics_Title) {
 		displayLyrics(title, titleIsLyrics_Artist, titleIsLyrics_Title)
 		go('byArtistAndTitle')
 		return
-
 	}
+
+	if (!navigator.onLine) return displayLyrics("You're offline.", "", "");
+
 	fetchLyricsByArtistAndTitle(artist, title)
 		.then((lyrics) => {
 			let result = lyrics.replace(/^Paroles de la chanson .+$/m, '');
@@ -49,3 +51,7 @@ function displayLyrics(lyrics, artist, title) {
 	app.byArtistAndTitle.artist.value = artist
 	app.byArtistAndTitle.title.value = title
 }
+
+document.addEventListener('keydown', e =>{
+	if(e.key == "Enter" && currentScreen === "byArtistAndTitle" && document.activeElement.nodeName === "INPUT") lyrics(app.byArtistAndTitle.artist.value, app.byArtistAndTitle.title.value);
+})
