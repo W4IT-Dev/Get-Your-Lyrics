@@ -1,6 +1,6 @@
 let classesWithColoredParents =
   /checkbox-container__input|radio-container__input|input-container__input|textarea-container__textarea|button-container|slider-container__slider/g;
-let classesWithCheckboxes = /radio-container__input|checkbox-container__input/g
+let classesWithCheckboxes = /radio-container__input|checkbox-container__input|list-item/g
 
 const callFunction = (callback, e) => {
   let element = e.target;

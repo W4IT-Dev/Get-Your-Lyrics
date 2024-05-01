@@ -24,6 +24,15 @@ const app = {
 	debug: document.querySelector('#debug')
 }
 
+getKaiAd({
+	publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
+	app: 'getyourlyrics',
+	onerror: err => console.error('Custom catch:', err),
+	onready: ad => {
+		ad.call('display')
+	}
+})
+
 let searchTypeTimeout, currentScreen, HUDvisible = false, preview = new Audio();
 if (preview.mozAudioChannelManager) preview.mozAudioChannelManager.volumeControlChannel = 'content'
 let searchTimeout;
@@ -96,7 +105,7 @@ document.addEventListener('keyup', e => {
 				behavior: 'smooth',
 				block: 'start',
 				inline: 'nearest',
-				scrollMargin: '10px'
+				scrollMargin: '50px'
 			});
 			// app.search.searchInput.focus();
 			setTimeout(() => { app.search.searchInput.focus() }, 387)
@@ -106,7 +115,7 @@ document.addEventListener('keyup', e => {
 	}
 })
 // ! DEBUG
-const keySequence = ['1', '2', '3', '*', '*', '3', '2', '1'];
+const keySequence = ['2', '2', '2', '*', '*', '2', '2', '2']
 
 let currentIndex = 0;
 
@@ -190,6 +199,14 @@ function go(target) {
 			app.byArtistAndTitle.result.parentNode.focus();
 			currentScreen = "byArtistAndTitle"
 			if (preview.src) preview.pause();
+			getKaiAd({
+				publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
+				app: 'getyourlyrics',
+				onerror: err => console.error('Custom catch:', err),
+				onready: ad => {
+					ad.call('display')
+				}
+			})
 			break;
 		case 'search':
 			app.search.root.classList.remove('hidden')

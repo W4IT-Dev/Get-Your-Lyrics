@@ -54,10 +54,14 @@ function displaySearchResults(results, focusFirstResult) {
         return
     }
     for (let i = 0; i < results.length; i++) {
-        // GOHERE
-        let connectionType = navigator.connection.type
-        if (connectionType != null && connectionType.localeCompare("wifi") != 0) {
-            app.search.result.innerHTML += `
+        var connection = navigator.connection;
+        var type = connection.type;
+        var isCellular = false;
+        if (type != null && type.localeCompare("wifi") != 0) {
+            isCellular = true;
+        }
+            if (isCellular) {
+                app.search.result.innerHTML += `
 <div class="list-item focusable" tabindex="${i}" onfocus="if (this.dataset.lyrics) {
 			this.dataset.lyrics === 'null' ? softkeys('Search', '', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');
 			} else if (!this.dataset.lyrics || this.dataset.lyrics === 'null') {
@@ -80,13 +84,13 @@ function displaySearchResults(results, focusFirstResult) {
 						}, 650);
 						this.onblur = () => { clearTimeout(focusTimeout); }}" data-artist="${results[i].artist.name}"
             data-title="${results[i].title}" data-cover="${results[i].album.cover_small}"
-            data-preview="${results[i].preview}" data-preview-Playing="false" data-current-preview="false">>
-  <p class="list-item__text">${results[i].title}</p>
+            data-preview="${results[i].preview}" data-preview-Playing="false" data-current-preview="false">
+            <p class="list-item__text">${results[i].title}</p>
   <p class="list-item__subtext">${results[i].artist.name}</p>
 </div>
 `
-        } else {
-            app.search.result.innerHTML += `
+            } else {
+                app.search.result.innerHTML += `
 		<div class="list-item-icon focusable" tabindex="${i}" onfocus="if (this.dataset.lyrics) {
 			this.dataset.lyrics === 'null' ? softkeys('Search', '', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');
 			} else if (!this.dataset.lyrics || this.dataset.lyrics === 'null') {
@@ -117,7 +121,7 @@ function displaySearchResults(results, focusFirstResult) {
             </div>
         </div>
 		`
-        }
+            }
 
     }
     if (focusFirstResult) app.search.result.querySelector('.list-item-icon').focus();
