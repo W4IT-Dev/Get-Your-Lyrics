@@ -1,6 +1,6 @@
 const app = {
 	byArtistAndTitle: {
-		root: document.querySelector('#artistAndTitle'),
+		root: document.querySelector('#byArtistAndTitle'),
 		artist: document.querySelector('#artist'),
 		title: document.querySelector('#title'),
 		fetchButton: document.querySelector('#fetchLyrics'),
@@ -20,8 +20,13 @@ const app = {
 		left: document.querySelector('.softkey-left'),
 		center: document.querySelector('.softkey-center'),
 		right: document.querySelector('.softkey-right')
-	}
+	},
+	debug: document.querySelector('#debug')
 }
+
+let searchTypeTimeout, currentScreen, HUDvisible = false, preview = new Audio();
+if (preview.mozAudioChannelManager) preview.mozAudioChannelManager.volumeControlChannel = 'content'
+let searchTimeout;
 
 if (!navigator.onLine) {
 	go('offline')
@@ -51,9 +56,7 @@ document.addEventListener('keydown', e => {
 })
 
 // KEYDOWN
-let searchTypeTimeout, currentScreen, HUDvisible = false, preview = new Audio();
-if (preview.mozAudioChannelManager) preview.mozAudioChannelManager.volumeControlChannel = 'content'
-let searchTimeout;
+
 app.search.searchInput.onkeydown = (e) => {
 	if (e.key == 'Enter') clearTimeout(searchTimeout), search(app.search.searchInput.value, true);
 }
@@ -77,7 +80,7 @@ document.addEventListener('keyup', e => {
 		if (e.key == "3") HUDvisible = true, navigator.volumeManager.requestUp(), setTimeout(() => { HUDvisible = false }, 2001);
 	}
 	if (HUDvisible) return
-	if (e.key == "Backspace" && document.activeElement.nodeName !== "INPUT") e.preventDefault(), back()
+	if (e.key == "Backspace" && document.activeElement.nodeName !== "INPUT" && currentScreen === "byArtistAndTitlebyArtistAndTitle") e.preventDefault(), go('search');
 
 	// NAVIGATE
 	if (e.key == "ArrowDown") nav(1);
@@ -87,11 +90,89 @@ document.addEventListener('keyup', e => {
 	if (e.key == "SoftRight" || e.key == "F4") playPreview();
 
 	// Search
-	if (e.key == "SoftLeft" || e.key == "F2") go('search')
-
+	if (e.key == "SoftLeft" || e.key == "F2" && currentScreen !== 'offline') {
+		if (currentScreen == "search") {
+			app.search.searchInput.scrollIntoView({
+				behavior: 'smooth',
+				block: 'start',
+				inline: 'nearest',
+				scrollMargin: '10px'
+			});
+			// app.search.searchInput.focus();
+			setTimeout(() => { app.search.searchInput.focus() }, 387)
+		} else {
+			go('search')
+		}
+	}
 })
+// ! DEBUG
+const keySequence = ['1', '2', '3', '*', '*', '3', '2', '1'];
 
+let currentIndex = 0;
 
+function handleKeyDown(event) {
+
+	const keyPressed = event.key;
+
+	if (keyPressed === keySequence[currentIndex]) {
+		currentIndex++;
+
+		if (currentIndex === keySequence.length) {
+			currentIndex = 0;
+			console.log('Key combination entered successfully!');
+			document.body.classList.toggle('debug')
+			function errorHandler(message, source, lineno, colno, error) {
+				const errorMessage = `
+				  Message: ${message}
+				  Source: ${source}
+				  Line number: ${lineno}
+				  Error object: ${error}
+				`;
+
+				showToast(errorMessage, 5000, '000')
+
+			}
+
+			document.body.classList.contains('debug') ? (window.onerror = errorHandler) : window.onerror = null
+			let debugMenu = prompt(`Debug mode enabled: ${document.body.classList.contains('debug')} Open debug menu?`, 'y/n')
+			if (debugMenu === 'n') {
+				go('search');
+			} else {
+				go('debug')
+				let networkInfo = navigator.connection
+				app.debug.innerHTML = '<div class="separator debug">' + networkInfo + '</div><br>'
+				for (let key in networkInfo) {
+					// Push each key into the keys array
+					app.debug.innerHTML += `
+			<div class="list-item focusable debug" tabindex="0">
+  <p class="list-item__text">${key}</p>
+  <p class="list-item__subtext">${networkInfo[key]}</p>
+</div>
+			`
+				}
+				let navigatorInfo = navigator
+				app.debug.innerHTML += '<div class="separator debug">' + navigatorInfo + '</div><br>'
+
+				for (let key in navigatorInfo) {
+					// Push each key into the keys array
+					app.debug.innerHTML += `
+			<div class="list-item focusable debug" tabindex="0">
+  <p class="list-item__text">${key}</p>
+  <p class="list-item__subtext">${navigatorInfo[key]}</p>
+</div>
+			`
+				}
+				// document.body.innerHTML = navigator.connection
+				app.debug.querySelector('.list-item').focus();
+			}
+		}
+	} else {
+		currentIndex = 0;
+	}
+}
+
+document.addEventListener('keydown', handleKeyDown);
+// DEBUG END
 
 // open page
 function go(target) {
@@ -99,7 +180,11 @@ function go(target) {
 	app.byArtistAndTitle.root.classList.add('hidden')
 	app.search.root.classList.add('hidden')
 	app.offline.root.classList.add('hidden')
+	app.debug.classList.add('hidden')
 	switch (target) {
+		case 'debug':
+			app.debug.classList.remove('hidden');
+			break;
 		case 'byArtistAndTitle':
 			app.byArtistAndTitle.root.classList.remove('hidden')
 			app.byArtistAndTitle.result.parentNode.focus();
@@ -112,7 +197,8 @@ function go(target) {
 			currentScreen = "search"
 			break;
 		case 'offline':
-			app.offline.root.classList.remove('hidden')
+			app.offline.root.classList.remove('hidden');
+			app.offline.settingsButton.focus();
 			app.offline.settingsButton.focus();
 			currentScreen = "offline"
 			break;
@@ -127,15 +213,12 @@ function go(target) {
 
 function back() {
 	if (currentScreen == "byArtistAndTitle") go('search')
-
 }
 
 function nav(move) {
 	const currentIndex = document.activeElement;
 	const items = document.querySelectorAll('.focusable');
 	let currentElemIdx = [...items].indexOf(currentIndex)
-
-	// if (move == -1 && currentElemIdx == -1) currentElemIdx = items.length
 	const next = currentElemIdx + move;
 	let targetElement = items[next];
 	if (targetElement) targetElement.focus();
@@ -143,11 +226,17 @@ function nav(move) {
 
 // set softkeys
 function softkeys(left, center, right) {
-	if (left === "{hideSoftkeys}") app.softkeys.root.classList.add('hidden')
-	else app.softkeys.root.classList.remove('hidden')
-	if (center) center = center.toUpperCase();
+	if (document.querySelector('#' + currentScreen)) {
+		if (left === "{hideSoftkeys}") {
+			app.softkeys.root.classList.add('hidden')
+			document.querySelector('#' + currentScreen).style.height = "100%"
+		} else {
+			app.softkeys.root.classList.remove('hidden')
+			document.querySelector('#' + currentScreen).style.height = "calc(100% - 3rem)"
+		}
+	}
 	if (left !== "{old}") app.softkeys.left.innerHTML = left || ''
-	if (center !== "{old}") app.softkeys.center.innerHTML = center || ''
+	if (center !== "{old}") app.softkeys.center.innerHTML = center ? center.toUpperCase() : ''
 	if (right !== "{old}") app.softkeys.right.innerHTML = right || ''
 }
 

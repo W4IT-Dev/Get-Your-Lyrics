@@ -1,3 +1,13 @@
+/* debug */
+body.debug * {
+    outline: 1px solid red;
+}
+
+.debug,
+div.debug * {
+    outline: none;
+}
+
 #app,
 body,
 html {
@@ -275,7 +285,7 @@ html {
     padding: 0 .5rem;
     font-size: 1.4rem;
     font-weight: 400;
-    background: var(--separator-background);
+    background: #ececec;
     color: var(--separator-color)
 }
 

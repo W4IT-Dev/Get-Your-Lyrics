@@ -23,12 +23,10 @@ function fetchLyricsByArtistAndTitle(artist, title) {
 // Get lyrics function
 function lyrics(artist, title, titleIsLyrics_Artist, titleIsLyrics_Title) {
 	if (artist === "isStoredLyrics" && typeof title !== undefined) {
-		// console.log(searchResults[title])
 		displayLyrics(searchResults[title].lyrics, searchResults[title].artist.name, searchResults[title].title)
 		return go('byArtistAndTitle')
 	}
 	if (artist === "titleIsLyrics" && typeof title !== undefined) {
-		// console.log(title)
 		displayLyrics(title, titleIsLyrics_Artist, titleIsLyrics_Title)
 		go('byArtistAndTitle')
 		return
@@ -38,8 +36,8 @@ function lyrics(artist, title, titleIsLyrics_Artist, titleIsLyrics_Title) {
 
 	fetchLyricsByArtistAndTitle(artist, title)
 		.then((lyrics) => {
-			let result = lyrics.replace(/^Paroles de la chanson .+$/m, '');
-			// console.log(result);
+			let result = lyrics.replace(/^Paroles de la chanson.+$/m, '');
+			result = result.replace('\r\n', '')
 
 			displayLyrics(result, artist, title)
 			go('byArtistAndTitle')
@@ -52,6 +50,6 @@ function displayLyrics(lyrics, artist, title) {
 	app.byArtistAndTitle.title.value = title
 }
 
-document.addEventListener('keydown', e =>{
-	if(e.key == "Enter" && currentScreen === "byArtistAndTitle" && document.activeElement.nodeName === "INPUT") lyrics(app.byArtistAndTitle.artist.value, app.byArtistAndTitle.title.value);
+document.addEventListener('keydown', e => {
+	if (e.key == "Enter" && currentScreen === "byArtistAndTitle" && document.activeElement.nodeName === "INPUT") lyrics(app.byArtistAndTitle.artist.value, app.byArtistAndTitle.title.value);
 })

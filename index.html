@@ -9,19 +9,19 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <script src="kui.js" defer></script>
     <script src="scripts/lyrics.js" defer></script>
     <script src="scripts/search.js" defer></script>
     <script src="/scripts/script.js" defer></script>
     <script src="/scripts/events.js" defer></script>
-    <script src="kui.js" defer></script>
 </head>
 
-<body tabindex="1" onload="go('search')">
+<body tabindex="1" onload="go('search'); softkeys('','Search', '')">
     <div id="app">
         <div class="kui-toast">
             <p class="kui-pri"></p>
         </div>
-        <div class="content hidden" id="artistAndTitle">
+        <div class="content hidden" id="byArtistAndTitle">
             <div class="input-container">
                 <label class="input-container__label" data-translate="artist">Artist</label>
                 <input type="text" tabindex="1" class="input-container__input focusable" id="artist" />
@@ -60,7 +60,7 @@
                     internet</p>
             </div>
             <div class="button-container">
-                <button tabindex="0" class="button-container__button focusable" onclick="let request = new MozActivity({
+                <button tabindex="1" class="button-container__button focusable" onclick="let request = new MozActivity({
                     name: 'configure',
                     data: {
                         target: 'device',
@@ -71,6 +71,7 @@
                 </button>
             </div>
         </div>
+        <div class="content hidden" id="debug"></div>
 
         <div class="softkeys">
             <div class="softkey softkey-left"></div>

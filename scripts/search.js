@@ -29,8 +29,8 @@ function search(query, focusFirstResult) {
     const isWhitespaceString = str => !str.replace(/\s/g, '').length
     if (isWhitespaceString(query)) return console.log('only whitespace')
     if (query == "" || query == "") return
-    app.search.result.innerHTML = "<h2 style='color:white; text-align: center;'>Searching...</h2>" // TODO
-    if(!navigator.onLine) return displaySearchResults("You're offline.", focusFirstResult);
+    app.search.result.innerHTML = "<h2 style='color:white; text-align: center;'>Searching...</h2>"
+    if (!navigator.onLine) return displaySearchResults("You're offline.", focusFirstResult);
 
     fetchSearchQuery(query)
         .then((results) => {
@@ -55,8 +55,8 @@ function displaySearchResults(results, focusFirstResult) {
     }
     for (let i = 0; i < results.length; i++) {
         // GOHERE
-        
-        if (navigator.connection === "cellular") {
+        let connectionType = navigator.connection.type
+        if (connectionType != null && connectionType.localeCompare("wifi") != 0) {
             app.search.result.innerHTML += `
 <div class="list-item focusable" tabindex="${i}" onfocus="if (this.dataset.lyrics) {
 			this.dataset.lyrics === 'null' ? softkeys('Search', '', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');
@@ -64,14 +64,14 @@ function displaySearchResults(results, focusFirstResult) {
 				let focusTimeout;
 				softkeys('Search', this.dataset.lyrics === 'null' ? '' : '', 'Preview');
 				focusTimeout = setTimeout(() => {
-					let activeElement = document.activeElement;softkeys('Search', 'LOADING', 'Search');
+					let activeElement = document.activeElement;softkeys('Search', 'LOADING', 'Preview');
 				fetchLyricsByArtistAndTitle(this.dataset.artist, this.dataset.title)
 				.then((result) => {
 					
 					if (activeElement === document.activeElement) { softkeys('Search', 'LYRICS', 'Preview');
                     if (result.includes('ERROR')) return showToast('No lyrics found', 1750,'ee1102'), softkeys('Search', '', 'Preview'), this.dataset.lyrics = 'null';
 					 } 
-					 this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '');
+					 this.dataset.lyrics = result.replace(/^Paroles de la chanson .+$/m, '')
 					 this.onkeydown = (e) => {
 						if (e.key == 'Enter' && this.dataset.lyrics) {
 						if (this.dataset.lyrics !== 'null') app.byArtistAndTitle.result.parentNode.dataset.index = this.tabIndex, app.byArtistAndTitle.result.parentNode.dataset.preview = this.dataset.preview,lyrics('titleIsLyrics', this.dataset.lyrics, this.dataset.artist, this.dataset.title);
