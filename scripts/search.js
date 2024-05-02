@@ -57,39 +57,8 @@ function displaySearchResults(results, focusFirstResult) {
         if (type != null && type.localeCompare("wifi") != 0) {
             isCellular = true;
         }
-        if(!(i%5)) {
-            app.search.result.innerHTML+=`
-            <div class="list-item" tabindex="0" id="searchResultListAd${i}"></div>
-            `
-            
-getKaiAd({
-	publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
-	app: 'getyourlyrics',
-	slot: 'searchResultListAd',
-	
-	h: 42,
-	w: 240,
-
-	container: document.getElementById(`searchResultListAd${i}`),
-	onerror: err => console.error('Custom catch:', err),
-	onready: ad => {
-		ad.call('display', {
-			tabindex: 0,
-			navClass: 'focusable',
-			display: 'block',
-		})
-        ad.on('display', ()=>{
-            setTimeout(()=>{
-                document.getElementById(`searchResultListAd${i}`).querySelector('.focusable').addEventListener('focus', ()=>{
-                    softkeys('', 'OPEN', '')
-                })
-            }, 100)
-        })
-	}
-})
-        }
-            if (isCellular) {
-                app.search.result.innerHTML += `
+        if (isCellular) {
+            app.search.result.innerHTML += `
 <div class="list-item focusable" tabindex="${i}" onfocus="if (this.dataset.lyrics) {
 			this.dataset.lyrics === 'null' ? softkeys('Search', '', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');
 			} else if (!this.dataset.lyrics || this.dataset.lyrics === 'null') {
@@ -117,8 +86,8 @@ getKaiAd({
   <p class="list-item__subtext">${results[i].artist.name}</p>
 </div>
 `
-            } else {
-                app.search.result.innerHTML += `
+        } else {
+            app.search.result.innerHTML += `
 		<div class="list-item-icon focusable" tabindex="${i}" onfocus="if (this.dataset.lyrics) {
 			this.dataset.lyrics === 'null' ? softkeys('Search', '', 'Preview') : softkeys('Search', 'LYRICS', 'Preview');
 			} else if (!this.dataset.lyrics || this.dataset.lyrics === 'null') {
@@ -149,7 +118,7 @@ getKaiAd({
             </div>
         </div>
 		`
-            }
+        }
 
     }
     if (focusFirstResult) app.search.result.querySelector('.list-item-icon').focus();

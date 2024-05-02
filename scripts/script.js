@@ -32,14 +32,37 @@ getKaiAd({
 		ad.call('display')
 	}
 })
+getKaiAd({
+	publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
+	app: 'getyourlyrics',
+	slot: 'lyricsPageAd',
+	h: 62,
+	w: 240,
+	container: document.getElementById(`lyricsPageAd`),
+	onerror: err => console.error('Custom catch:', err),
+	onready: ad => {
+		ad.call('display', {
+			tabindex: 0,
+			navClass: 'focusable',
+			display: 'block',
+		})
+		ad.on('display', () => {
+			setTimeout(() => {
+				document.getElementById(`lyricsPageAd`).querySelector('.focusable').addEventListener('focus', () => {
+					softkeys('', 'OPEN', '')
+				})
+			}, 100)
+		})
+	}
+})
 
 let searchTypeTimeout, currentScreen, HUDvisible = false, preview = new Audio();
 if (preview.mozAudioChannelManager) preview.mozAudioChannelManager.volumeControlChannel = 'content'
 let searchTimeout;
 
 if (!navigator.onLine) {
-	go('offline')
-}
+	go('offline'), softkeys('', 'GO')
+} else go('search'), softkeys('', 'Search')
 
 window.onoffline = (event) => {
 	console.log(event)
@@ -89,7 +112,7 @@ document.addEventListener('keyup', e => {
 		if (e.key == "3") HUDvisible = true, navigator.volumeManager.requestUp(), setTimeout(() => { HUDvisible = false }, 2001);
 	}
 	if (HUDvisible) return
-	if (e.key == "Backspace" && document.activeElement.nodeName !== "INPUT" && currentScreen === "byArtistAndTitlebyArtistAndTitle") e.preventDefault(), go('search');
+	if (e.key == "Backspace" && document.activeElement.nodeName !== "INPUT" && currentScreen === "byArtistAndTitle") e.preventDefault(), go('search');
 
 	// NAVIGATE
 	if (e.key == "ArrowDown") nav(1);
@@ -100,18 +123,7 @@ document.addEventListener('keyup', e => {
 
 	// Search
 	if (e.key == "SoftLeft" || e.key == "F2" && currentScreen !== 'offline') {
-		if (currentScreen == "search") {
-			app.search.searchInput.scrollIntoView({
-				behavior: 'smooth',
-				block: 'start',
-				inline: 'nearest',
-				scrollMargin: '50px'
-			});
-			// app.search.searchInput.focus();
-			setTimeout(() => { app.search.searchInput.focus() }, 387)
-		} else {
-			go('search')
-		}
+		go('search')
 	}
 })
 // ! DEBUG
@@ -207,29 +219,7 @@ function go(target) {
 			// 		ad.call('display')
 			// 	}
 			// })
-			getKaiAd({
-				publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
-				app: 'getyourlyrics',
-				slot: 'lyricsPageAd',
-				h: 42,
-				w: 240,
-				container: document.getElementById(`lyricsPageAd`),
-				onerror: err => console.error('Custom catch:', err),
-				onready: ad => {
-					ad.call('display', {
-						tabindex: 0,
-						navClass: 'focusable',
-						display: 'block',
-					})
-					ad.on('display', () => {
-						setTimeout(() => {
-							document.getElementById(`lyricsPageAd`).querySelector('.focusable').addEventListener('focus', () => {
-								softkeys('', 'OPEN', '')
-							})
-						}, 100)
-					})
-				}
-			})
+
 			break;
 		case 'search':
 			app.search.root.classList.remove('hidden')
