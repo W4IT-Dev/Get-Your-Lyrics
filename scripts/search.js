@@ -1,10 +1,7 @@
-// = SEARCH =
-let searchResults;;
-let searchResultCopy;
+let searchResults, searchResultCopy
 function fetchSearchQuery(query) {
     return fetch(`https://api.lyrics.ovh/suggest/${query}`)
         .then((response) => {
-            // console.log(response)
             if (response.status.toString().startsWith('5')) throw new Error('ERROR: Something is wrong with the server\nTry again later.')
             if (!response.ok) {
                 throw new Error("ERROR: Network response was not ok.");
@@ -59,6 +56,37 @@ function displaySearchResults(results, focusFirstResult) {
         var isCellular = false;
         if (type != null && type.localeCompare("wifi") != 0) {
             isCellular = true;
+        }
+        if(!(i%5)) {
+            app.search.result.innerHTML+=`
+            <div class="list-item" tabindex="0" id="searchResultListAd${i}"></div>
+            `
+            
+getKaiAd({
+	publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
+	app: 'getyourlyrics',
+	slot: 'searchResultListAd',
+	
+	h: 42,
+	w: 240,
+
+	container: document.getElementById(`searchResultListAd${i}`),
+	onerror: err => console.error('Custom catch:', err),
+	onready: ad => {
+		ad.call('display', {
+			tabindex: 0,
+			navClass: 'focusable',
+			display: 'block',
+		})
+        ad.on('display', ()=>{
+            setTimeout(()=>{
+                document.getElementById(`searchResultListAd${i}`).querySelector('.focusable').addEventListener('focus', ()=>{
+                    softkeys('', 'OPEN', '')
+                })
+            }, 100)
+        })
+	}
+})
         }
             if (isCellular) {
                 app.search.result.innerHTML += `

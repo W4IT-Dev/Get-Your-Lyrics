@@ -199,12 +199,35 @@ function go(target) {
 			app.byArtistAndTitle.result.parentNode.focus();
 			currentScreen = "byArtistAndTitle"
 			if (preview.src) preview.pause();
+			// getKaiAd({
+			// 	publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
+			// 	app: 'getyourlyrics',
+			// 	onerror: err => console.error('Custom catch:', err),
+			// 	onready: ad => {
+			// 		ad.call('display')
+			// 	}
+			// })
 			getKaiAd({
 				publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
 				app: 'getyourlyrics',
+				slot: 'lyricsPageAd',
+				h: 42,
+				w: 240,
+				container: document.getElementById(`lyricsPageAd`),
 				onerror: err => console.error('Custom catch:', err),
 				onready: ad => {
-					ad.call('display')
+					ad.call('display', {
+						tabindex: 0,
+						navClass: 'focusable',
+						display: 'block',
+					})
+					ad.on('display', () => {
+						setTimeout(() => {
+							document.getElementById(`lyricsPageAd`).querySelector('.focusable').addEventListener('focus', () => {
+								softkeys('', 'OPEN', '')
+							})
+						}, 100)
+					})
 				}
 			})
 			break;

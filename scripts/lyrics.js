@@ -1,4 +1,3 @@
-// Fetch function
 function fetchLyricsByArtistAndTitle(artist, title) {
 	return fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
 		.then((response) => {
@@ -12,7 +11,7 @@ function fetchLyricsByArtistAndTitle(artist, title) {
 		})
 		.then((data) => {
 			console.log(`Lyrics result when fetching lyrics from  ${artist + "/" + title}: ` + data)
-			return data.lyrics; // Return the lyrics data
+			return data.lyrics;
 		})
 		.catch((error) => {
 			console.warn(`Error when FETCHING LYRICS from ${artist + "/" + title}: ` + error);
@@ -20,7 +19,6 @@ function fetchLyricsByArtistAndTitle(artist, title) {
 		});
 }
 
-// Get lyrics function
 function lyrics(artist, title, titleIsLyrics_Artist, titleIsLyrics_Title) {
 	if (artist === "isStoredLyrics" && typeof title !== undefined) {
 		displayLyrics(searchResults[title].lyrics, searchResults[title].artist.name, searchResults[title].title)
