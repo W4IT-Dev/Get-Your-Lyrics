@@ -27,7 +27,7 @@ const app = {
 getKaiAd({
 	publisher: 'fe2d9134-74be-48d8-83b9-96f6d803efef',
 	app: 'getyourlyrics',
-	onerror: err => console.error('Custom catch:', err),
+	onerror: err => console.error('KaiAd fullscreen ad Error:', err),
 	onready: ad => {
 		ad.call('display')
 	}
@@ -39,7 +39,7 @@ getKaiAd({
 	h: 62,
 	w: 240,
 	container: document.getElementById(`lyricsPageAd`),
-	onerror: err => console.error('Custom catch:', err),
+	onerror: err => console.error('KaiAd banner ad Error', err),
 	onready: ad => {
 		ad.call('display', {
 			tabindex: 0,
