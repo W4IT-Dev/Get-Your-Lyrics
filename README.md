@@ -19,7 +19,7 @@ Get Your Lyrics is the ultimate app for exploring song lyrics on your KaiOS devi
 <br>
 
 ## Download
-[![KaiStore to come](https://img.shields.io/badge/KaiStore%20to%20come-6F02B5?logo=kaios)](/) [![ZIP](https://img.shields.io/badge/ZIP-181717?logo=github)](https://github.com/W4IT-Dev/Get-Your-Lyrics/releases/download/v1.0.0/Get.Your.Lyrics_v1.0.0_github_release.zip)
+[![KaiStore](https://img.shields.io/badge/KaiStore-6F02B5?logo=kaios)](https://www.kaiostech.com/store/apps/?bundle_id=kaios.app.getyourlyrics) [![ZIP](https://img.shields.io/badge/ZIP-181717?logo=github)](https://github.com/W4IT-Dev/Get-Your-Lyrics/releases/download/v1.0.0/Get.Your.Lyrics_v1.0.0_github_release.zip)
 
 <br>
 
